@@ -1,0 +1,128 @@
+/* "Invoice (NF-e)" box of the order edit screen. */
+.isq-invoice__status {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin: 0 0 8px;
+}
+
+.isq-invoice__badge {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 3px;
+	background: #f0f0f1;
+	color: #50575e;
+	font-weight: 600;
+	line-height: 1.6;
+}
+
+.isq-invoice__badge--authorized {
+	background: #edfaef;
+	color: #00650d;
+}
+
+.isq-invoice__badge--scheduled,
+.isq-invoice__badge--emitting,
+.isq-invoice__badge--processing {
+	background: #f0f6fc;
+	color: #0a4b78;
+}
+
+.isq-invoice__badge--blocked,
+.isq-invoice__badge--error,
+.isq-invoice__badge--denied,
+.isq-invoice__badge--failed {
+	background: #fcf0f1;
+	color: #8a2424;
+}
+
+.isq-invoice__badge--test {
+	background: #fcf9e8;
+	color: #6e4e00;
+	font-weight: 400;
+}
+
+.isq-invoice .notice.inline {
+	margin: 0 0 10px;
+}
+
+.isq-invoice__text,
+.isq-invoice__message,
+.isq-invoice__hint {
+	margin: 0 0 10px;
+}
+
+.isq-invoice__hint {
+	color: #646970;
+}
+
+.isq-invoice__details {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 4px 10px;
+	margin: 0 0 10px;
+}
+
+.isq-invoice__details dt {
+	color: #646970;
+}
+
+.isq-invoice__details dd {
+	margin: 0;
+	font-weight: 600;
+}
+
+.isq-invoice__key {
+	font-family: Consolas, Monaco, monospace;
+	font-size: 11px;
+	font-weight: 400 !important;
+	word-break: break-word;
+}
+
+.isq-invoice__reasons {
+	margin: 0 0 10px 16px;
+	list-style: disc;
+}
+
+.isq-invoice__reasons li {
+	margin-bottom: 6px;
+}
+
+.isq-invoice__actions,
+.isq-invoice__cancel-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+}
+
+.isq-invoice__actions .spinner {
+	float: none;
+	margin: 0;
+}
+
+.isq-invoice__cancel {
+	margin-top: 12px;
+	padding-top: 12px;
+	border-top: 1px solid #dcdcde;
+}
+
+.isq-invoice__cancel label {
+	display: block;
+	margin-bottom: 4px;
+	font-weight: 600;
+}
+
+.isq-invoice__cancel textarea {
+	width: 100%;
+}
+
+.isq-invoice__counter {
+	margin: 4px 0 8px;
+	color: #646970;
+}
+
+.isq-invoice.is-busy .isq-invoice__actions,
+.isq-invoice.is-busy .isq-invoice__cancel-actions {
+	opacity: 0.7;
+}

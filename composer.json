@@ -1,0 +1,23 @@
+{
+    "name": "infixs/squidcore",
+    "description": "SquidCore - ERP & CRM Platform",
+    "type": "wordpress-plugin",
+    "minimum-stability": "dev",
+    "config": {
+        "autoloader-suffix": "InfixsSquidCore"
+    },
+    "autoload": {
+        "psr-4": {
+            "Infixs\\SquidCore\\": "src/app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Infixs Technology",
+            "homepage": "https://infixs.com"
+        }
+    ],
+    "require": {
+        "avelpress/avelpress": "^2.0"
+    }
+}
