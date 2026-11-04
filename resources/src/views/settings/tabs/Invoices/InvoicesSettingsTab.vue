@@ -6,7 +6,7 @@ import WarningNotice from "@/components/shared/WarningNotice.vue";
 import { useInvoiceLabels } from "@/composables/useInvoiceLabels";
 import { AI_NCM_FOCUS, INVOICE_DELAY_HOURS } from "@/lib/invoices";
 import { useI18n } from "@/composables/useI18n";
-import { useNcmCoveragePolling } from "@/composables/useNcmCoveragePolling";
+import { useStatusPolling } from "@/composables/useStatusPolling";
 import { useOAuthConnect } from "@/composables/useOAuthConnect";
 import { toRoute } from "@/routes/helpers";
 import { useAppStore } from "@/stores/useAppStore";
@@ -49,7 +49,7 @@ const aiState = computed<AiNcmState>(() => (!aiNcmAvailable.value ? "unavailable
 /** A new count is on its way (after an import, for example): the number shown would be the old one. */
 const isCountingNcm = computed(() => ncmCoverage.value?.computing ?? false);
 
-useNcmCoveragePolling(() => isCountingNcm.value);
+useStatusPolling(() => isCountingNcm.value);
 
 watch(invoices, (value) => {
   form.value = { ...value };

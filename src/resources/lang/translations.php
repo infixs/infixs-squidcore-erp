@@ -204,6 +204,11 @@ return [
 			'none' => __( 'The AI could not suggest an NCM for the products. Fill it in SquidCore and try again.', 'infixs-squidcore-erp' ),
 			'retried' => __( 'The invoice was requested again.', 'infixs-squidcore-erp' ),
 		],
+		'numbering_advice' => [
+			'numbers' => __( 'Series {series}: no. {numbers}', 'infixs-squidcore-erp' ),
+			'title_many' => __( '{count} NF-e were rejected because of the numbering', 'infixs-squidcore-erp' ),
+			'title_one' => __( '1 NF-e was rejected because of the numbering', 'infixs-squidcore-erp' ),
+		],
 		'pending' => [
 			'empty' => __( 'No invoice needs your attention.', 'infixs-squidcore-erp' ),
 			'load_error' => __( 'Could not load the invoices waiting for you.', 'infixs-squidcore-erp' ),
@@ -228,6 +233,12 @@ return [
 			'cancelled' => __( 'Invoice {number} cancelled.', 'infixs-squidcore-erp' ),
 			'failed' => __( 'The invoice was not issued.', 'infixs-squidcore-erp' ),
 			'processing' => __( 'Invoice sent. SEFAZ may take a few minutes to authorize it.', 'infixs-squidcore-erp' ),
+		],
+		'usage' => [
+			'count' => __( 'Invoices this month: {used} of {limit}', 'infixs-squidcore-erp' ),
+			'left_many' => __( '{count} invoices left in this month\'s plan', 'infixs-squidcore-erp' ),
+			'left_one' => __( '1 invoice left in this month\'s plan', 'infixs-squidcore-erp' ),
+			'reached' => __( 'You used all the invoices of this month\'s plan. See the plans to issue more.', 'infixs-squidcore-erp' ),
 		],
 	],
 	'ai' => [
@@ -284,6 +295,18 @@ return [
 		'offline' => __( 'Last WebmaniaBR NF-e: no. {last}, series {series}. When you connect, continue the numbering from {next}.', 'infixs-squidcore-erp' ),
 		'ok' => __( 'SquidCore numbering is already past the last WebmaniaBR NF-e.', 'infixs-squidcore-erp' ),
 		'title' => __( 'Continue the invoice numbering', 'infixs-squidcore-erp' ),
+	],
+	'plan_limit' => [
+		'issue_pending' => __( 'Issue the pending invoices', 'infixs-squidcore-erp' ),
+		'next_step' => __( 'After changing your plan, issue the pending invoices all at once.', 'infixs-squidcore-erp' ),
+		'notice_many' => __( 'The invoice limit of your plan was reached: {count} orders are without an invoice.', 'infixs-squidcore-erp' ),
+		'notice_one' => __( 'The invoice limit of your plan was reached: 1 order is without an invoice.', 'infixs-squidcore-erp' ),
+		'queued' => __( 'The pending invoices were queued and will be issued one by one.', 'infixs-squidcore-erp' ),
+		'running' => __( 'Issuing the pending invoices in the background: {done} of {total}.', 'infixs-squidcore-erp' ),
+		'see_plans' => __( 'See plans in SquidCore', 'infixs-squidcore-erp' ),
+		'stopped_account' => __( 'The emission paused because SquidCore refused the invoices of your account. Check your subscription and your plan in SquidCore, then try again.', 'infixs-squidcore-erp' ),
+		'stopped_plan_limit' => __( 'The plan limit is still reached, so the emission paused. Once you change your plan, try again.', 'infixs-squidcore-erp' ),
+		'stopped_unavailable' => __( 'The emission paused because SquidCore did not answer. Try again in a few minutes.', 'infixs-squidcore-erp' ),
 	],
 	'settings' => [
 		'load_error' => __( 'Error loading settings', 'infixs-squidcore-erp' ),

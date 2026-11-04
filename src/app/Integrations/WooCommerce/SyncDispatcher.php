@@ -2,6 +2,7 @@
 
 namespace Infixs\SquidCore\Integrations\WooCommerce;
 
+use Infixs\SquidCore\Integrations\CorreiosAutomatico\CorreiosTrackingCodes;
 use Infixs\SquidCore\Integrations\WooCommerce\Products\ProductNcmResolver;
 use Infixs\SquidCore\Integrations\WooCommerce\Serializers\CategorySerializer;
 use Infixs\SquidCore\Integrations\WooCommerce\Serializers\OrderSerializer;
@@ -78,14 +79,22 @@ class SyncDispatcher {
 	 */
 	protected $queue;
 
-	public function __construct( SquidCoreClient $client, SyncStatusRepository $status, ActivityRepository $activity, BackgroundQueue $queue, ProductNcmResolver $ncmResolver ) {
+	/**
+	 * @param SquidCoreClient $client
+	 * @param SyncStatusRepository $status
+	 * @param ActivityRepository $activity
+	 * @param BackgroundQueue $queue
+	 * @param ProductNcmResolver $ncmResolver
+	 * @param CorreiosTrackingCodes|null $trackingCodes Tracking codes of Correios Automático in the order pushes.
+	 */
+	public function __construct( SquidCoreClient $client, SyncStatusRepository $status, ActivityRepository $activity, BackgroundQueue $queue, ProductNcmResolver $ncmResolver, ?CorreiosTrackingCodes $trackingCodes = null ) {
 		$this->client = $client;
 		$this->status = $status;
 		$this->activity = $activity;
 		$this->queue = $queue;
 		$this->productSerializer = new ProductSerializer( $ncmResolver );
 		$this->categorySerializer = new CategorySerializer();
-		$this->orderSerializer = new OrderSerializer( $ncmResolver );
+		$this->orderSerializer = new OrderSerializer( $ncmResolver, $trackingCodes );
 	}
 
 	/**

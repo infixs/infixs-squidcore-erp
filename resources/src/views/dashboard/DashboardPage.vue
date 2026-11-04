@@ -2,6 +2,7 @@
 import ActivityCard from "@/components/dashboard/ActivityCard.vue";
 import NcmCoverageCard from "@/components/dashboard/NcmCoverageCard.vue";
 import OnboardingCard from "@/components/dashboard/OnboardingCard.vue";
+import InvoiceUsageMeter from "@/components/plan-limit/InvoiceUsageMeter.vue";
 import ConnectionStatusBadge from "@/components/shared/ConnectionStatusBadge.vue";
 import EnabledBadge from "@/components/shared/EnabledBadge.vue";
 import HealthBanner from "@/components/shared/HealthBanner.vue";
@@ -11,6 +12,7 @@ import { useConnectionActions } from "@/composables/useConnectionActions";
 import { useInvoiceLabels } from "@/composables/useInvoiceLabels";
 import { useI18n } from "@/composables/useI18n";
 import { useOAuthConnect } from "@/composables/useOAuthConnect";
+import { usePlanLimit } from "@/composables/usePlanLimit";
 import { formatDateTime, formatRelativeTime, hostOf } from "@/lib/utils";
 import { toRoute } from "@/routes/helpers";
 import { useActivityStore } from "@/stores/useActivityStore";
@@ -42,6 +44,7 @@ const { last30Days } = storeToRefs(activityStore);
 const { testSavedConnection } = useConnectionActions();
 const { isStarting, startOAuth } = useOAuthConnect();
 const { delayLabel } = useInvoiceLabels();
+const { usage, usagePlansUrl } = usePlanLimit();
 
 const connectionRoute = toRoute("settings-connection");
 const syncSettingsRoute = toRoute("settings-sync");
@@ -55,7 +58,7 @@ const showCoverage = computed(() => !!ncmCoverage.value && (ncmCoverage.value.to
 const canImportFromCard = computed(
   () => !!fiscalImport.value?.suggest && !fiscalImport.value.notices.some((notice) => notice.id === "webmania-import-ncm"),
 );
-const isRefreshing = computed(() => statusStore.isLoading || activityStore.isLoading);
+const isRefreshing = computed(() => statusStore.isLoading || statusStore.isRefreshingUsage || activityStore.isLoading);
 
 // "Updated 2 minutes ago" keeps counting while the page stays open.
 const now = useNow({ interval: 30_000 });
@@ -120,8 +123,15 @@ watch(
   { immediate: true },
 );
 
-/** The data stays on screen while it reloads; the automatic refresh fails quietly. */
+/**
+ * The data stays on screen while it reloads; the automatic refresh fails quietly. Only "Refresh" reads the use of the
+ * month from SquidCore again (first, so the status brings it): the automatic one shows the last read.
+ */
 async function refresh(silent = false) {
+  if (!silent && connection.value?.connected) {
+    await statusStore.refreshInvoiceUsage().catch(() => {});
+  }
+
   try {
     await statusStore.fetchStatus();
   } catch {
@@ -321,6 +331,12 @@ onMounted(() => {
             <span>{{ t("dashboard.invoices.authorized_30_days", "Authorized (30 days)") }}</span>
             <span class="isce:font-semibold isce:tabular-nums">{{ authorizedLast30Days }}</span>
           </div>
+          <InvoiceUsageMeter
+            v-if="usage"
+            class="isce:mt-1 isce:border-t isce:pt-3"
+            :usage="usage"
+            :plans-url="usagePlansUrl"
+          />
           <template #actions>
             <Button
               v-if="invoicesRoute"

@@ -92,7 +92,6 @@ class WebmaniaNumberingCheck {
 			}
 		}
 
-		$app_url = $this->urls->appUrl();
 		$check = [
 			'webmania' => [
 				'series' => $webmania['series'],
@@ -107,8 +106,8 @@ class WebmaniaNumberingCheck {
 				'operationNature' => $this->webmania->operationNature(),
 				'origin' => $this->webmania->defaultOrigin(),
 			],
-			'numberingUrl' => $app_url . '/settings/nfe-numeracao',
-			'fiscalSettingsUrl' => $app_url . '/settings/fiscal',
+			'numberingUrl' => $this->urls->nfeNumberingUrl(),
+			'fiscalSettingsUrl' => $this->urls->appUrl() . '/settings/fiscal',
 			'checkedAt' => gmdate( 'c' ),
 		];
 

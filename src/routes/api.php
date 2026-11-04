@@ -9,6 +9,7 @@ use Infixs\SquidCore\Http\Controllers\Api\V1\NcmCoverageV1Controller;
 use Infixs\SquidCore\Http\Controllers\Api\V1\NoticesV1Controller;
 use Infixs\SquidCore\Http\Controllers\Api\V1\OAuthV1Controller;
 use Infixs\SquidCore\Http\Controllers\Api\V1\OrderInvoiceV1Controller;
+use Infixs\SquidCore\Http\Controllers\Api\V1\PlanLimitV1Controller;
 use Infixs\SquidCore\Http\Controllers\Api\V1\SettingsV1Controller;
 use Infixs\SquidCore\Http\Controllers\Api\V1\StatusV1Controller;
 
@@ -25,8 +26,11 @@ Route::prefix( 'infixs-squidcore/v1' )->guards( [ 'manage_options' ] )->group( f
 
 	Route::get( '/invoices', [ InvoicesV1Controller::class, 'index' ] );
 	Route::get( '/invoices/pending', [ InvoicesV1Controller::class, 'pending' ] );
+	Route::post( '/invoices/plan-limit/retry', [ PlanLimitV1Controller::class, 'retry' ] );
+	Route::post( '/invoices/usage/refresh', [ PlanLimitV1Controller::class, 'refreshUsage' ] );
 
 	Route::post( '/connection/test', [ ConnectionV1Controller::class, 'test' ] );
+	Route::post( '/connection/verify', [ ConnectionV1Controller::class, 'verify' ] );
 	Route::post( '/connection/disconnect', [ ConnectionV1Controller::class, 'disconnect' ] );
 	Route::post( '/connection/oauth/start', [ OAuthV1Controller::class, 'start' ] );
 

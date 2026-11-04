@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: SquidCore - ERP & CRM Platform 1.4.1\n"
+"Project-Id-Version: SquidCore - ERP & CRM Platform 1.5.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/infixs-squidcore-erp\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-24T15:11:48+00:00\n"
+"POT-Creation-Date: 2026-11-04T05:19:27+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: infixs-squidcore-erp\n"
@@ -67,20 +67,20 @@ msgstr ""
 
 #: src/app/Admin/Menu.php:31
 #: src/resources/lang/translations.php:123
-#: src/resources/lang/translations.php:516
+#: src/resources/lang/translations.php:539
 msgid "Synchronization"
 msgstr ""
 
 #: src/app/Admin/Menu.php:35
 #: src/resources/lang/translations.php:89
 #: src/resources/lang/translations.php:158
-#: src/resources/lang/translations.php:515
+#: src/resources/lang/translations.php:538
 msgid "Invoices"
 msgstr ""
 
 #: src/app/Admin/Menu.php:39
 #: src/app/Admin/Setup.php:34
-#: src/resources/lang/translations.php:292
+#: src/resources/lang/translations.php:315
 msgid "Settings"
 msgstr ""
 
@@ -112,7 +112,7 @@ msgstr ""
 
 #: src/app/Integrations/CorreiosAutomatico/CorreiosInvoiceBridge.php:214
 #: src/resources/lang/translations.php:157
-#: src/resources/views/admin/invoice-meta-box.php:47
+#: src/resources/views/admin/invoice-meta-box.php:52
 msgid "Test environment"
 msgstr ""
 
@@ -134,7 +134,7 @@ msgstr ""
 
 #: src/app/Integrations/CorreiosAutomatico/CorreiosInvoiceBridge.php:450
 #: src/resources/lang/translations.php:169
-#: src/resources/views/admin/invoice-meta-box.php:146
+#: src/resources/views/admin/invoice-meta-box.php:177
 #: src/resources/views/front/invoice-email-links-plain.php:20
 #: src/resources/views/front/invoice-order-section.php:31
 msgid "XML"
@@ -142,7 +142,7 @@ msgstr ""
 
 #: src/app/Integrations/CorreiosAutomatico/CorreiosInvoiceBridge.php:458
 #: src/resources/lang/translations.php:162
-#: src/resources/views/admin/invoice-meta-box.php:148
+#: src/resources/views/admin/invoice-meta-box.php:179
 msgid "Cancellation XML"
 msgstr ""
 
@@ -161,57 +161,62 @@ msgid "You are not allowed to download invoices."
 msgstr ""
 
 #. translators: %d: number of invoices.
-#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceAttentionNotice.php:54
+#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceAttentionNotice.php:87
 #, php-format
 msgid "%d invoice (NF-e) needs your attention."
 msgid_plural "%d invoices (NF-e) need your attention."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceAttentionNotice.php:60
+#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceAttentionNotice.php:93
 msgid "See the invoices"
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceAttentionNotice.php:61
+#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceAttentionNotice.php:94
 msgid "Open the orders flagged in the NF-e column of the orders list to see what is missing."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceMetaBox.php:90
+#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceAttentionNotice.php:110
+#: src/app/Integrations/WooCommerce/Products/FiscalImport/FiscalImportNotice.php:85
+msgid "Sorry, you are not allowed to do that."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceMetaBox.php:92
 msgid "Invoice (NF-e)"
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceMetaBox.php:149
+#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceMetaBox.php:151
 msgid "The action could not be completed. Try again."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceMetaBox.php:176
+#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceMetaBox.php:180
 #: src/resources/lang/translations.php:152
 msgid "A new invoice will be issued for this order. Continue?"
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceMetaBox.php:201
+#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceMetaBox.php:210
 msgid "Simplified DANFE ready: it prints with the Correios labels."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceMetaBox.php:203
+#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceMetaBox.php:212
 msgid "Simplified DANFE being prepared: it prints with the Correios labels once ready."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceMetaBox.php:205
+#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceMetaBox.php:214
 msgid "The simplified DANFE could not be read from the invoice XML. Print the full DANFE instead."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceMetaBox.php:213
+#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceMetaBox.php:222
 #: src/resources/lang/translations.php:166
 msgid "Issue a new invoice"
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceMetaBox.php:217
+#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceMetaBox.php:226
 #: src/resources/lang/translations.php:167
 msgid "Try again"
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceMetaBox.php:220
+#: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceMetaBox.php:229
 #: src/resources/lang/translations.php:164
 msgid "Issue now"
 msgstr ""
@@ -241,7 +246,7 @@ msgstr ""
 
 #: src/app/Integrations/WooCommerce/Invoices/Admin/InvoiceOrderColumn.php:171
 #: src/resources/lang/translations.php:163
-#: src/resources/views/admin/invoice-meta-box.php:145
+#: src/resources/views/admin/invoice-meta-box.php:176
 msgid "DANFE"
 msgstr ""
 
@@ -255,7 +260,7 @@ msgid "Label"
 msgstr ""
 
 #: src/app/Integrations/WooCommerce/Invoices/Front/InvoiceCustomerDownload.php:54
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceApi.php:132
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceApi.php:143
 #: src/app/Integrations/WooCommerce/Invoices/InvoiceDownloadResponder.php:100
 msgid "Unknown invoice file."
 msgstr ""
@@ -279,23 +284,23 @@ msgstr ""
 msgid "SquidCore returned an unexpected file. Try again in a few minutes."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceEligibility.php:36
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceEligibility.php:41
 msgid "Automatic invoice skipped: the order was split into marketplace sub-orders."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceEligibility.php:40
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceEligibility.php:45
 msgid "Automatic invoice skipped: this is a marketplace sub-order."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceEligibility.php:44
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceEligibility.php:49
 msgid "Automatic invoice skipped: the order total is zero."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceEligibility.php:48
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceEligibility.php:53
 msgid "Automatic invoice skipped: the customer is outside Brazil. You can still issue it manually."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceEligibility.php:61
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceEligibility.php:66
 msgid "Automatic invoice skipped by a customization of the store."
 msgstr ""
 
@@ -308,57 +313,57 @@ msgid "Automatic invoice skipped: the automatic emission was turned off."
 msgstr ""
 
 #: src/app/Integrations/WooCommerce/Invoices/InvoiceLabels.php:18
-#: src/resources/lang/translations.php:222
+#: src/resources/lang/translations.php:227
 msgid "Scheduled"
 msgstr ""
 
 #: src/app/Integrations/WooCommerce/Invoices/InvoiceLabels.php:20
-#: src/resources/lang/translations.php:217
+#: src/resources/lang/translations.php:222
 msgid "Sending"
 msgstr ""
 
 #: src/app/Integrations/WooCommerce/Invoices/InvoiceLabels.php:22
-#: src/resources/lang/translations.php:221
+#: src/resources/lang/translations.php:226
 msgid "Processing"
 msgstr ""
 
 #: src/app/Integrations/WooCommerce/Invoices/InvoiceLabels.php:24
-#: src/resources/lang/translations.php:213
+#: src/resources/lang/translations.php:218
 msgid "Authorized"
 msgstr ""
 
 #: src/app/Integrations/WooCommerce/Invoices/InvoiceLabels.php:26
-#: src/resources/lang/translations.php:214
+#: src/resources/lang/translations.php:219
 msgid "Pending items"
 msgstr ""
 
 #: src/app/Integrations/WooCommerce/Invoices/InvoiceLabels.php:28
-#: src/resources/lang/translations.php:218
+#: src/resources/lang/translations.php:223
 msgid "Rejected"
 msgstr ""
 
 #: src/app/Integrations/WooCommerce/Invoices/InvoiceLabels.php:30
-#: src/resources/lang/translations.php:216
+#: src/resources/lang/translations.php:221
 msgid "Denied"
 msgstr ""
 
 #: src/app/Integrations/WooCommerce/Invoices/InvoiceLabels.php:32
-#: src/resources/lang/translations.php:219
+#: src/resources/lang/translations.php:224
 msgid "Failed"
 msgstr ""
 
 #: src/app/Integrations/WooCommerce/Invoices/InvoiceLabels.php:34
-#: src/resources/lang/translations.php:215
+#: src/resources/lang/translations.php:220
 msgid "Cancelled"
 msgstr ""
 
 #: src/app/Integrations/WooCommerce/Invoices/InvoiceLabels.php:36
-#: src/resources/lang/translations.php:223
+#: src/resources/lang/translations.php:228
 msgid "Not issued"
 msgstr ""
 
 #: src/app/Integrations/WooCommerce/Invoices/InvoiceLabels.php:39
-#: src/resources/lang/translations.php:220
+#: src/resources/lang/translations.php:225
 msgid "No invoice"
 msgstr ""
 
@@ -405,8 +410,8 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: src/app/Integrations/WooCommerce/Invoices/InvoiceLabels.php:132
-#: src/resources/lang/translations.php:344
-#: src/resources/lang/translations.php:371
+#: src/resources/lang/translations.php:367
+#: src/resources/lang/translations.php:394
 msgid "Product"
 msgstr ""
 
@@ -426,117 +431,118 @@ msgstr ""
 msgid "SquidCore: NCM filled by AI (review it in SquidCore):"
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceOrderWatcher.php:38
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceOrderWatcher.php:41
 msgid "Automatic invoice skipped: the order was cancelled."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceOrderWatcher.php:46
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceOrderWatcher.php:49
 msgid "Automatic invoice skipped: the order was refunded."
 msgstr ""
 
 #. translators: %s: code of the pending item, e.g. "woo_order.item_zero_price".
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceRecord.php:419
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceRecord.php:501
 #, php-format
 msgid "SquidCore reported a pending item (%s). Check the order in SquidCore."
 msgstr ""
 
 #. translators: %s: date and time of the emission.
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:189
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:200
 #, php-format
 msgid "SquidCore: invoice (NF-e) scheduled for %s."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:234
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:245
 msgid "The invoice of this order is already being issued. Wait a moment and refresh."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:241
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:252
 msgid "This order already has an invoice being issued or authorized."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:278
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:388
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:316
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:426
 msgid "The invoice of this order is being updated. Wait a moment and refresh."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:285
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:323
 msgid "This order has no invoice yet."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:358
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:396
 msgid "SquidCore: the invoice is still being processed by SEFAZ. Use \"Refresh\" on the order to check it again."
 msgstr ""
 
 #. translators: 1: minimum length, 2: maximum length.
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:382
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:420
 #, php-format
 msgid "The cancellation reason must have between %1$d and %2$d characters."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:395
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:433
 msgid "Only an authorized invoice can be cancelled."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:401
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:439
 #: src/app/Support/ApiErrorMessage.php:113
 msgid "The 24-hour cancellation window has ended. Issue a return invoice (NF-e de devolução) in SquidCore."
 msgstr ""
 
 #. translators: %s: cancellation reason.
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:414
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:452
 #, php-format
 msgid "Reason: %s"
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:674
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:712
+#: src/app/Integrations/WooCommerce/Invoices/PlanLimit/PlanLimitRetry.php:151
 msgid "SquidCore is not connected. Connect the store in the plugin settings and try again."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:680
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:718
 #: src/app/Support/ApiErrorMessage.php:103
 msgid "SquidCore is not accepting orders from this store. Enable receiving orders in the WooCommerce integration in SquidCore and try again."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:715
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:753
 msgid "SquidCore did not return the invoice. Refresh to check it."
 msgstr ""
 
 #. translators: 1: error message, 2: date and time of the next attempt.
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:753
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:802
 #, php-format
 msgid "SquidCore: the invoice could not be issued now (%1$s). New attempt on %2$s."
 msgstr ""
 
 #. translators: %s: error message.
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:797
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:872
 #, php-format
 msgid "SquidCore: the invoice was not issued. %s"
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:890
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:969
 msgid "invoice (NF-e) sent, waiting for SEFAZ."
 msgstr ""
 
 #. translators: 1: invoice number, 2: series, 3: access key.
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:893
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:972
 #, php-format
 msgid "invoice (NF-e) number %1$s, series %2$s authorized. Access key: %3$s."
 msgstr ""
 
 #. translators: %s: message returned by SEFAZ.
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:896
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:975
 #, php-format
 msgid "the invoice (NF-e) was rejected. %s"
 msgstr ""
 
 #. translators: %s: message returned by SEFAZ.
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:899
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:978
 #, php-format
 msgid "the invoice (NF-e) was denied by SEFAZ. %s"
 msgstr ""
 
 #. translators: %s: invoice number.
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:902
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:981
 #, php-format
 msgid "invoice (NF-e) number %s cancelled."
 msgstr ""
@@ -547,17 +553,173 @@ msgstr ""
 msgid "Choose one of these delays (hours): %s."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Products/FiscalImport/FiscalImportNotice.php:85
-msgid "Sorry, you are not allowed to do that."
+#. translators: %s: number of orders.
+#: src/app/Integrations/WooCommerce/Invoices/PlanLimit/PlanLimitLabels.php:22
+#, php-format
+msgid "The invoice limit of your plan was reached: %s order is without an invoice."
+msgid_plural "The invoice limit of your plan was reached: %s orders are without an invoice."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/app/Integrations/WooCommerce/Invoices/PlanLimit/PlanLimitLabels.php:36
+#: src/resources/lang/translations.php:301
+msgid "After changing your plan, issue the pending invoices all at once."
+msgstr ""
+
+#. translators: 1: invoices gone through, 2: invoices to issue.
+#: src/app/Integrations/WooCommerce/Invoices/PlanLimit/PlanLimitLabels.php:48
+#, php-format
+msgid "Issuing the pending invoices in the background: %1$s of %2$s."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/PlanLimit/PlanLimitLabels.php:60
+#: src/resources/lang/translations.php:308
+msgid "The plan limit is still reached, so the emission paused. Once you change your plan, try again."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/PlanLimit/PlanLimitLabels.php:62
+#: src/resources/lang/translations.php:307
+msgid "The emission paused because SquidCore refused the invoices of your account. Check your subscription and your plan in SquidCore, then try again."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/PlanLimit/PlanLimitLabels.php:64
+#: src/resources/lang/translations.php:309
+msgid "The emission paused because SquidCore did not answer. Try again in a few minutes."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/PlanLimit/PlanLimitLabels.php:76
+msgid "The invoice pending for the plan limit will not be issued: the order was cancelled."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/PlanLimit/PlanLimitLabels.php:78
+msgid "The invoice pending for the plan limit will not be issued: the order was refunded."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/PlanLimit/PlanLimitLabels.php:80
+msgid "The invoice pending for the plan limit will not be issued: the order was moved to the trash."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/PlanLimit/PlanLimitLabels.php:82
+msgid "The invoice pending for the plan limit will not be issued: the payment of the order failed."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/PlanLimit/PlanLimitLabels.php:87
+#: src/resources/lang/translations.php:306
+msgid "See plans in SquidCore"
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/PlanLimit/PlanLimitLabels.php:91
+#: src/resources/lang/translations.php:300
+msgid "Issue the pending invoices"
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/PlanLimit/PlanLimitLabels.php:98
+msgid "After changing your plan, click \"Try again\"."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/PlanLimit/PlanLimitRetry.php:157
+msgid "No invoice is waiting for the plan limit."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:67
+msgid "SEFAZ already has an NF-e with the same number and series, issued by another system — for example, the one the store used before SquidCore."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:72
+msgid "The number of this NF-e was already used"
+msgstr ""
+
+#. translators: 1: number of the NF-e SEFAZ already has, 2: its series, 3: month and year it was issued (e.g. "April 2026").
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:75
+#, php-format
+msgid "SEFAZ has NF-e no. %1$s of series %2$s, from %3$s."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:80
+msgid "SEFAZ already has NF-e with these numbers, issued by another system — for example, the one the store used before SquidCore."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:86
+msgid "This NF-e number was voided"
+msgstr ""
+
+#. translators: 1: NF-e number, 2: series.
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:89
+#, php-format
+msgid "Number %1$s of series %2$s was already voided at SEFAZ, usually by the system the store used before SquidCore. A voided number cannot be used again."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:92
+msgid "This number was already voided at SEFAZ, usually by the system the store used before SquidCore. A voided number cannot be used again."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:93
+msgid "These numbers were already voided at SEFAZ, usually by the system the store used before SquidCore. A voided number cannot be used again."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:97
+msgid "This same invoice already reached SEFAZ, for example in an earlier attempt whose answer was lost."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:99
+msgid "Click \"Refresh\" before issuing it again: the invoice may already be authorized."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:100
+msgid "If it stays like this, check the invoice in the SquidCore panel."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:105
+msgid "SEFAZ already received this NF-e"
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:111
+#: src/resources/lang/translations.php:36
+msgid "Open SquidCore"
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:120
+msgid "Adjust the NF-e numbering in SquidCore (Settings → NF-e numbering) and issue it again."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:123
+msgid "Use \"Refresh\" on the order to fetch the status of the invoice."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:136
+msgid "Check in the previous system, or with your accountant, the last number used in this series (an NF-e issued or a voided number)."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:137
+msgid "In SquidCore, under Settings → NF-e numbering, set \"Next number\" to the one after the last used. If you prefer, create a series the store never used (for example, series 2 starting at 1) and make it the default."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:144
+msgid "Then click \"Try again\" to issue the invoice."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:146
+msgid "Then click \"Try again\" on each invoice below."
+msgstr ""
+
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:148
+#: src/resources/lang/translations.php:288
+msgid "Adjust numbering in SquidCore"
+msgstr ""
+
+#. translators: PHP date format of a month and year, e.g. "F Y" for "April 2026" (pt-BR: "F \d\e Y").
+#: src/app/Integrations/WooCommerce/Invoices/SefazRejectionAdvice.php:158
+msgctxt "month and year of an NF-e"
+msgid "F Y"
 msgstr ""
 
 #: src/app/Integrations/WooCommerce/Products/FiscalImport/FiscalImportNotice.php:131
-#: src/resources/lang/translations.php:273
+#: src/resources/lang/translations.php:284
 msgid "Make the most of the NCM codes you already saved in WebmaniaBR"
 msgstr ""
 
 #: src/app/Integrations/WooCommerce/Products/FiscalImport/FiscalImportNotice.php:133
-#: src/resources/lang/translations.php:272
+#: src/resources/lang/translations.php:283
 msgid "We found NCM codes of your products in WebmaniaBR. Bring them to SquidCore in a few clicks."
 msgstr ""
 
@@ -570,7 +732,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: src/app/Integrations/WooCommerce/Products/FiscalImport/FiscalImportNotice.php:144
-#: src/resources/lang/translations.php:269
+#: src/resources/lang/translations.php:280
 msgid "See what can be imported"
 msgstr ""
 
@@ -579,17 +741,17 @@ msgid "Remind me in 7 days"
 msgstr ""
 
 #: src/app/Integrations/WooCommerce/Products/FiscalImport/FiscalImportNotice.php:149
-#: src/resources/lang/translations.php:266
+#: src/resources/lang/translations.php:277
 msgid "One invoice per order"
 msgstr ""
 
 #: src/app/Integrations/WooCommerce/Products/FiscalImport/FiscalImportNotice.php:150
-#: src/resources/lang/translations.php:265
+#: src/resources/lang/translations.php:276
 msgid "To keep one invoice per order, leave the automatic emission on in SquidCore only."
 msgstr ""
 
 #: src/app/Integrations/WooCommerce/Products/FiscalImport/FiscalImportNotice.php:151
-#: src/resources/lang/translations.php:264
+#: src/resources/lang/translations.php:275
 msgid "Open WebmaniaBR settings"
 msgstr ""
 
@@ -606,7 +768,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: src/app/Integrations/WooCommerce/Products/FiscalImport/FiscalImportNotice.php:162
-#: src/resources/lang/translations.php:259
+#: src/resources/lang/translations.php:270
 msgid "See summary"
 msgstr ""
 
@@ -672,11 +834,11 @@ msgstr ""
 msgid "Use this"
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/SyncDispatcher.php:135
+#: src/app/Integrations/WooCommerce/SyncDispatcher.php:144
 msgid "The item to send no longer exists."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/SyncDispatcher.php:140
+#: src/app/Integrations/WooCommerce/SyncDispatcher.php:149
 msgid "SquidCore received the data but discarded it: receiving data from this store is disabled in the WooCommerce integration in SquidCore."
 msgstr ""
 
@@ -688,44 +850,44 @@ msgstr ""
 msgid "Could not create the WooCommerce REST API key for SquidCore."
 msgstr ""
 
-#: src/app/Services/ConnectionService.php:163
+#: src/app/Services/ConnectionService.php:170
 msgid "Please provide an access token."
 msgstr ""
 
 #. translators: %s: why the token did not connect.
-#: src/app/Services/ConnectionService.php:176
+#: src/app/Services/ConnectionService.php:183
 #, php-format
 msgid "The token was not saved, so the connection made with Connect with SquidCore was kept. %s"
 msgstr ""
 
-#: src/app/Services/ConnectionService.php:217
+#: src/app/Services/ConnectionService.php:224
 msgid "Connect with SquidCore or fill in the access token before testing."
 msgstr ""
 
 #. translators: %s: why the request to SquidCore failed.
-#: src/app/Services/ConnectionService.php:354
+#: src/app/Services/ConnectionService.php:393
 #, php-format
 msgid "The store was disconnected, but SquidCore could not be told (%s). Revoke the access of \"SquidCore para WooCommerce\" in SquidCore, under Settings › Connected apps."
 msgstr ""
 
-#: src/app/Services/ConnectionService.php:430
+#: src/app/Services/ConnectionService.php:469
 msgid "The SquidCore API address changed since the store was connected. Connect with SquidCore again."
 msgstr ""
 
-#: src/app/Services/ConnectionService.php:435
+#: src/app/Services/ConnectionService.php:474
 msgid "The SquidCore API address changed since the last check. Test the connection again."
 msgstr ""
 
-#: src/app/Services/ConnectionService.php:505
+#: src/app/Services/ConnectionService.php:541
 msgid "Connection established successfully."
 msgstr ""
 
-#: src/app/Services/ConnectionService.php:507
+#: src/app/Services/ConnectionService.php:543
 msgid "The SquidCore API did not confirm the connection."
 msgstr ""
 
 #: src/app/Services/OAuthConnectService.php:234
-#: src/resources/lang/translations.php:303
+#: src/resources/lang/translations.php:326
 msgid "The connection request expired or was already used. Click Connect with SquidCore again."
 msgstr ""
 
@@ -738,7 +900,7 @@ msgid "The answer did not come from the SquidCore server the connection was star
 msgstr ""
 
 #: src/app/Services/OAuthConnectService.php:256
-#: src/resources/lang/translations.php:302
+#: src/resources/lang/translations.php:325
 msgid "The authorization was cancelled in SquidCore, so the store was not connected."
 msgstr ""
 
@@ -779,7 +941,7 @@ msgid "Store connected to SquidCore: %s."
 msgstr ""
 
 #: src/app/Services/OAuthConnectService.php:376
-#: src/resources/lang/translations.php:301
+#: src/resources/lang/translations.php:324
 msgid "Store connected to SquidCore."
 msgstr ""
 
@@ -829,10 +991,6 @@ msgstr ""
 #: src/app/Support/ApiErrorMessage.php:61
 #, php-format
 msgid "Could not reach the SquidCore API: %s"
-msgstr ""
-
-#: src/app/Support/ApiErrorMessage.php:87
-msgid "The invoice limit of your SquidCore plan was reached. Upgrade your plan and try again."
 msgstr ""
 
 #: src/app/Support/ApiErrorMessage.php:89
@@ -966,6 +1124,16 @@ msgstr ""
 msgid "The user who generated the token does not have the SquidCore permission this action needs (%s). Generate the token with a user who has it."
 msgstr ""
 
+#. translators: 1: invoices issued this month, 2: invoices the plan allows per month.
+#: src/app/Support/ApiErrorMessage.php:319
+#, php-format
+msgid "The invoice limit of your SquidCore plan was reached (%1$d of %2$d this month). Upgrade your plan and try again."
+msgstr ""
+
+#: src/app/Support/ApiErrorMessage.php:325
+msgid "The invoice limit of your SquidCore plan was reached. Upgrade your plan and try again."
+msgstr ""
+
 #: src/app/Support/OAuth/OAuthPendingRequests.php:32
 #: src/app/Support/OAuth/OAuthPendingRequests.php:36
 msgid "Could not start the connection. Try again."
@@ -1000,13 +1168,13 @@ msgid "SquidCore connection is not configured."
 msgstr ""
 
 #. translators: %s: name of the wp-config.php constant.
-#: src/app/Support/SquidCoreUrls.php:78
+#: src/app/Support/SquidCoreUrls.php:92
 #, php-format
 msgid "The %s constant in wp-config.php is not a valid URL. Use an address starting with https://."
 msgstr ""
 
 #. translators: %s: name of the wp-config.php constant.
-#: src/app/Support/SquidCoreUrls.php:85
+#: src/app/Support/SquidCoreUrls.php:99
 #, php-format
 msgid "The %s constant in wp-config.php must start with https://, otherwise the access token would travel unencrypted."
 msgstr ""
@@ -1044,7 +1212,7 @@ msgid "OK"
 msgstr ""
 
 #: src/resources/lang/translations.php:15
-#: src/resources/views/admin/invoice-meta-box.php:155
+#: src/resources/views/admin/invoice-meta-box.php:186
 msgid "Refresh"
 msgstr ""
 
@@ -1120,10 +1288,6 @@ msgstr ""
 msgid "Not connected"
 msgstr ""
 
-#: src/resources/lang/translations.php:36
-msgid "Open SquidCore"
-msgstr ""
-
 #: src/resources/lang/translations.php:37
 msgid "Organization: {name}"
 msgstr ""
@@ -1141,7 +1305,7 @@ msgid "Test connection"
 msgstr ""
 
 #: src/resources/lang/translations.php:43
-#: src/resources/lang/translations.php:513
+#: src/resources/lang/translations.php:536
 msgid "Connection"
 msgstr ""
 
@@ -1296,7 +1460,7 @@ msgid "Authorized (30 days)"
 msgstr ""
 
 #: src/resources/lang/translations.php:87
-#: src/resources/lang/translations.php:479
+#: src/resources/lang/translations.php:502
 msgid "Automatic emission"
 msgstr ""
 
@@ -1309,7 +1473,7 @@ msgid "View invoices"
 msgstr ""
 
 #: src/resources/lang/translations.php:91
-#: src/resources/lang/translations.php:210
+#: src/resources/lang/translations.php:215
 msgid "Waiting for you"
 msgstr ""
 
@@ -1390,12 +1554,12 @@ msgid "No send recorded yet"
 msgstr ""
 
 #: src/resources/lang/translations.php:116
-#: src/resources/lang/translations.php:510
+#: src/resources/lang/translations.php:533
 msgid "Sync options"
 msgstr ""
 
 #: src/resources/lang/translations.php:117
-#: src/resources/lang/translations.php:507
+#: src/resources/lang/translations.php:530
 msgid "Orders"
 msgstr ""
 
@@ -1480,7 +1644,7 @@ msgid "Product updated"
 msgstr ""
 
 #: src/resources/lang/translations.php:145
-#: src/resources/views/admin/invoice-meta-box.php:130
+#: src/resources/views/admin/invoice-meta-box.php:161
 msgid "Tip: connect OpenAI or Claude in SquidCore to fill the missing NCM with AI."
 msgstr ""
 
@@ -1531,8 +1695,8 @@ msgstr ""
 #: src/resources/lang/translations.php:161
 #: src/resources/lang/translations.php:173
 #: src/resources/lang/translations.php:177
-#: src/resources/views/admin/invoice-meta-box.php:158
-#: src/resources/views/admin/invoice-meta-box.php:176
+#: src/resources/views/admin/invoice-meta-box.php:189
+#: src/resources/views/admin/invoice-meta-box.php:207
 msgid "Cancel invoice"
 msgstr ""
 
@@ -1545,8 +1709,8 @@ msgid "View order"
 msgstr ""
 
 #: src/resources/lang/translations.php:172
-#: src/resources/lang/translations.php:376
-#: src/resources/views/admin/invoice-meta-box.php:177
+#: src/resources/lang/translations.php:399
+#: src/resources/views/admin/invoice-meta-box.php:208
 msgid "Back"
 msgstr ""
 
@@ -1559,7 +1723,7 @@ msgid "At least {count} characters."
 msgstr ""
 
 #: src/resources/lang/translations.php:176
-#: src/resources/views/admin/invoice-meta-box.php:165
+#: src/resources/views/admin/invoice-meta-box.php:196
 msgid "Reason for the cancellation (sent to SEFAZ)"
 msgstr ""
 
@@ -1572,7 +1736,7 @@ msgid "Authorized on"
 msgstr ""
 
 #: src/resources/lang/translations.php:182
-#: src/resources/lang/translations.php:485
+#: src/resources/lang/translations.php:508
 msgid "Customer"
 msgstr ""
 
@@ -1586,7 +1750,7 @@ msgstr ""
 
 #: src/resources/lang/translations.php:185
 #: src/resources/lang/translations.php:197
-#: src/resources/lang/translations.php:310
+#: src/resources/lang/translations.php:333
 msgid "Status"
 msgstr ""
 
@@ -1635,1023 +1799,1063 @@ msgid "NCM filled by AI for 1 product. Review it in SquidCore."
 msgstr ""
 
 #: src/resources/lang/translations.php:208
-msgid "No invoice needs your attention."
+msgid "Series {series}: no. {numbers}"
 msgstr ""
 
 #: src/resources/lang/translations.php:209
+msgid "{count} NF-e were rejected because of the numbering"
+msgstr ""
+
+#: src/resources/lang/translations.php:210
+msgid "1 NF-e was rejected because of the numbering"
+msgstr ""
+
+#: src/resources/lang/translations.php:213
+msgid "No invoice needs your attention."
+msgstr ""
+
+#: src/resources/lang/translations.php:214
 msgid "Could not load the invoices waiting for you."
 msgstr ""
 
-#: src/resources/lang/translations.php:226
+#: src/resources/lang/translations.php:231
 msgid "Invoice {number} authorized."
 msgstr ""
 
-#: src/resources/lang/translations.php:227
+#: src/resources/lang/translations.php:232
 msgid "The invoice was not issued: fix the pending items and try again."
 msgstr ""
 
-#: src/resources/lang/translations.php:228
+#: src/resources/lang/translations.php:233
 msgid "Invoice {number} cancelled."
 msgstr ""
 
-#: src/resources/lang/translations.php:229
+#: src/resources/lang/translations.php:234
 msgid "The invoice was not issued."
 msgstr ""
 
-#: src/resources/lang/translations.php:230
+#: src/resources/lang/translations.php:235
 msgid "Invoice sent. SEFAZ may take a few minutes to authorize it."
 msgstr ""
 
-#: src/resources/lang/translations.php:234
-#: src/resources/views/admin/invoice-meta-box.php:132
-msgid "Connect an AI in SquidCore"
-msgstr ""
-
-#: src/resources/lang/translations.php:235
-msgid "Turn on automatic AI filling"
-msgstr ""
-
-#: src/resources/lang/translations.php:236
-msgid "SquidCore fills the missing NCM with AI when issuing."
+#: src/resources/lang/translations.php:238
+msgid "Invoices this month: {used} of {limit}"
 msgstr ""
 
 #: src/resources/lang/translations.php:239
-msgid "All your products have an NCM."
+msgid "{count} invoices left in this month's plan"
 msgstr ""
 
 #: src/resources/lang/translations.php:240
-msgid "Counted {when}"
+msgid "1 invoice left in this month's plan"
 msgstr ""
 
 #: src/resources/lang/translations.php:241
-msgid "Counting your products…"
-msgstr ""
-
-#: src/resources/lang/translations.php:242
-msgid "Import from WebmaniaBR"
-msgstr ""
-
-#: src/resources/lang/translations.php:243
-msgid "{count} without NCM"
-msgstr ""
-
-#: src/resources/lang/translations.php:244
-msgid "1 without NCM"
+msgid "You used all the invoices of this month's plan. See the plans to issue more."
 msgstr ""
 
 #: src/resources/lang/translations.php:245
-msgid "Not counted yet."
+#: src/resources/views/admin/invoice-meta-box.php:163
+msgid "Connect an AI in SquidCore"
 msgstr ""
 
 #: src/resources/lang/translations.php:246
-msgid "{with} of {total} with NCM"
+msgid "Turn on automatic AI filling"
 msgstr ""
 
 #: src/resources/lang/translations.php:247
-msgid "Product NCM"
+msgid "SquidCore fills the missing NCM with AI when issuing."
 msgstr ""
 
-#: src/resources/lang/translations.php:248
-msgid "See products without NCM"
+#: src/resources/lang/translations.php:250
+msgid "All your products have an NCM."
 msgstr ""
 
 #: src/resources/lang/translations.php:251
-msgid "Dismiss notice"
+msgid "Counted {when}"
 msgstr ""
 
 #: src/resources/lang/translations.php:252
-msgid "Next notice"
+msgid "Counting your products…"
 msgstr ""
 
 #: src/resources/lang/translations.php:253
-msgid "{current} of {total}"
+msgid "Import from WebmaniaBR"
 msgstr ""
 
 #: src/resources/lang/translations.php:254
-msgid "Previous notice"
+msgid "{count} without NCM"
 msgstr ""
 
 #: src/resources/lang/translations.php:255
-msgid "Importing NCM… {processed} of {total} products."
+msgid "1 without NCM"
 msgstr ""
 
 #: src/resources/lang/translations.php:256
-msgid "Follow"
+msgid "Not counted yet."
 msgstr ""
 
 #: src/resources/lang/translations.php:257
+msgid "{with} of {total} with NCM"
+msgstr ""
+
+#: src/resources/lang/translations.php:258
+msgid "Product NCM"
+msgstr ""
+
+#: src/resources/lang/translations.php:259
+msgid "See products without NCM"
+msgstr ""
+
+#: src/resources/lang/translations.php:262
+msgid "Dismiss notice"
+msgstr ""
+
+#: src/resources/lang/translations.php:263
+msgid "Next notice"
+msgstr ""
+
+#: src/resources/lang/translations.php:264
+msgid "{current} of {total}"
+msgstr ""
+
+#: src/resources/lang/translations.php:265
+msgid "Previous notice"
+msgstr ""
+
+#: src/resources/lang/translations.php:266
+msgid "Importing NCM… {processed} of {total} products."
+msgstr ""
+
+#: src/resources/lang/translations.php:267
+msgid "Follow"
+msgstr ""
+
+#: src/resources/lang/translations.php:268
 msgid "Not now"
 msgstr ""
 
-#: src/resources/lang/translations.php:260
+#: src/resources/lang/translations.php:271
 msgid "Import finished: {count} products now have an NCM."
 msgstr ""
 
-#: src/resources/lang/translations.php:261
+#: src/resources/lang/translations.php:272
 msgid "Import finished: 1 product now has an NCM."
 msgstr ""
 
-#: src/resources/lang/translations.php:270
+#: src/resources/lang/translations.php:281
 msgid "{count} products can get these NCM codes in a few clicks, so you issue invoices without typing them again."
 msgstr ""
 
-#: src/resources/lang/translations.php:271
+#: src/resources/lang/translations.php:282
 msgid "1 product can get this NCM in a few clicks, so you issue invoices without typing it again."
 msgstr ""
 
-#: src/resources/lang/translations.php:277
-msgid "Adjust numbering in SquidCore"
-msgstr ""
-
-#: src/resources/lang/translations.php:278
+#: src/resources/lang/translations.php:289
 msgid "CNPJ {cnpj}"
 msgstr ""
 
-#: src/resources/lang/translations.php:279
+#: src/resources/lang/translations.php:290
 msgid "Check it in the Webmania panel before adjusting."
 msgstr ""
 
-#: src/resources/lang/translations.php:280
+#: src/resources/lang/translations.php:291
 msgid "Continue the numbering where WebmaniaBR stopped: last NF-e no. {last}, series {series}. In SquidCore, the next one in series {series} is no. {next}."
 msgstr ""
 
-#: src/resources/lang/translations.php:281
+#: src/resources/lang/translations.php:292
 msgid "Probably test invoices (homologation)."
 msgstr ""
 
-#: src/resources/lang/translations.php:282
+#: src/resources/lang/translations.php:293
 msgid "Could not check the numbering in SquidCore."
 msgstr ""
 
-#: src/resources/lang/translations.php:283
+#: src/resources/lang/translations.php:294
 msgid "Continue the numbering where WebmaniaBR stopped: last NF-e no. {last}, series {series}. Series {series} is not set up in SquidCore yet: the first NF-e would go out as no. 1."
 msgstr ""
 
-#: src/resources/lang/translations.php:284
+#: src/resources/lang/translations.php:295
 msgid "Last WebmaniaBR NF-e: no. {last}, series {series}. When you connect, continue the numbering from {next}."
 msgstr ""
 
-#: src/resources/lang/translations.php:285
+#: src/resources/lang/translations.php:296
 msgid "SquidCore numbering is already past the last WebmaniaBR NF-e."
 msgstr ""
 
-#: src/resources/lang/translations.php:286
+#: src/resources/lang/translations.php:297
 msgid "Continue the invoice numbering"
 msgstr ""
 
-#: src/resources/lang/translations.php:289
-msgid "Error loading settings"
+#: src/resources/lang/translations.php:302
+msgid "The invoice limit of your plan was reached: {count} orders are without an invoice."
 msgstr ""
 
-#: src/resources/lang/translations.php:290
-msgid "Error saving settings"
-msgstr ""
-
-#: src/resources/lang/translations.php:291
-msgid "Settings saved successfully"
-msgstr ""
-
-#: src/resources/lang/translations.php:294
-msgid "Using the API set in wp-config.php (INFIXS_SQUIDCORE_API_URL): {url}"
-msgstr ""
-
-#: src/resources/lang/translations.php:295
-msgid "Connect this store to your SquidCore organization: click Connect with SquidCore, sign in and authorize the store."
-msgstr ""
-
-#: src/resources/lang/translations.php:296
-msgid "Hide token"
-msgstr ""
-
-#: src/resources/lang/translations.php:297
-msgid "For stores that cannot use Connect with SquidCore: paste a plugin token generated in SquidCore. Saving a token replaces a connection made with Connect with SquidCore."
-msgstr ""
-
-#: src/resources/lang/translations.php:298
-msgid "Manual connection (token)"
-msgstr ""
-
-#: src/resources/lang/translations.php:299
-msgid "Connection method: the SquidCore para WooCommerce app, authorized in SquidCore. It can also be revoked there, under Settings › Connected apps."
-msgstr ""
-
-#: src/resources/lang/translations.php:300
-msgid "Connection method: access token (manual connection)."
+#: src/resources/lang/translations.php:303
+msgid "The invoice limit of your plan was reached: 1 order is without an invoice."
 msgstr ""
 
 #: src/resources/lang/translations.php:304
-msgid "The store could not be connected to SquidCore. Try again."
+msgid "The pending invoices were queued and will be issued one by one."
 msgstr ""
 
 #: src/resources/lang/translations.php:305
-msgid "You sign in to SquidCore, choose the company and authorize this store. The plugin creates the WooCommerce REST API keys SquidCore needs, so no token is copied by hand."
-msgstr ""
-
-#: src/resources/lang/translations.php:306
-msgid "Open integrations in SquidCore"
-msgstr ""
-
-#: src/resources/lang/translations.php:307
-msgid "Save token"
-msgstr ""
-
-#: src/resources/lang/translations.php:308
-msgid "Settings saved, but the connection was not confirmed."
-msgstr ""
-
-#: src/resources/lang/translations.php:309
-msgid "Show token"
-msgstr ""
-
-#: src/resources/lang/translations.php:311
-msgid "Test this token"
+msgid "Issuing the pending invoices in the background: {done} of {total}."
 msgstr ""
 
 #: src/resources/lang/translations.php:312
-msgid "SquidCore Connection"
+msgid "Error loading settings"
 msgstr ""
 
 #: src/resources/lang/translations.php:313
-msgid "Access token"
+msgid "Error saving settings"
 msgstr ""
 
 #: src/resources/lang/translations.php:314
-msgid "Generate it in SquidCore under Integrations › WooCommerce › Synchronization › Generate plugin token. The saved token is never shown again."
+msgid "Settings saved successfully"
 msgstr ""
 
-#: src/resources/lang/translations.php:315
-msgid "{mask} (leave blank to keep)"
+#: src/resources/lang/translations.php:317
+msgid "Using the API set in wp-config.php (INFIXS_SQUIDCORE_API_URL): {url}"
 msgstr ""
 
 #: src/resources/lang/translations.php:318
-msgid "Bring the tax data you already have in another invoice plugin."
+msgid "Connect this store to your SquidCore organization: click Connect with SquidCore, sign in and authorize the store."
 msgstr ""
 
 #: src/resources/lang/translations.php:319
-msgid "Could not load the import."
+msgid "Hide token"
 msgstr ""
 
 #: src/resources/lang/translations.php:320
-#: src/resources/lang/translations.php:514
-msgid "Import data"
+msgid "For stores that cannot use Connect with SquidCore: paste a plugin token generated in SquidCore. Saving a token replaces a connection made with Connect with SquidCore."
+msgstr ""
+
+#: src/resources/lang/translations.php:321
+msgid "Manual connection (token)"
 msgstr ""
 
 #: src/resources/lang/translations.php:322
-msgid "Check the tax defaults in SquidCore"
+msgid "Connection method: the SquidCore para WooCommerce app, authorized in SquidCore. It can also be revoked there, under Settings › Connected apps."
 msgstr ""
 
 #: src/resources/lang/translations.php:323
-msgid "WebmaniaBR keeps the CFOP in its tax class, outside WordPress. SquidCore uses {internal} (in-state) and {interstate} (out-of-state) by default, and you can adjust it in the company or in any product."
-msgstr ""
-
-#: src/resources/lang/translations.php:324
-msgid "CFOP"
+msgid "Connection method: access token (manual connection)."
 msgstr ""
 
 #: src/resources/lang/translations.php:327
-msgid "Use the category NCM on products without their own ({count})"
+msgid "The store could not be connected to SquidCore. Try again."
 msgstr ""
 
 #: src/resources/lang/translations.php:328
-msgid "When the product already has an NCM"
+msgid "You sign in to SquidCore, choose the company and authorize this store. The plugin creates the WooCommerce REST API keys SquidCore needs, so no token is copied by hand."
 msgstr ""
 
 #: src/resources/lang/translations.php:329
-msgid "Store default NCM ({ncm}) for the remaining products (up to {count})"
+msgid "Open integrations in SquidCore"
 msgstr ""
 
 #: src/resources/lang/translations.php:330
-msgid "Recommended only when all your products share the same classification."
+msgid "Save token"
 msgstr ""
 
 #: src/resources/lang/translations.php:331
-msgid "Old NCM from Correios Automático ({count})"
+msgid "Settings saved, but the connection was not confirmed."
 msgstr ""
 
 #: src/resources/lang/translations.php:332
-msgid "Keep the Correios Automático one"
-msgstr ""
-
-#: src/resources/lang/translations.php:333
-msgid "Use the WebmaniaBR one (the one on your invoices)"
+msgid "Show token"
 msgstr ""
 
 #: src/resources/lang/translations.php:334
-msgid "Keep the current one (recommended)"
+msgid "Test this token"
 msgstr ""
 
 #: src/resources/lang/translations.php:335
-msgid "Use the WebmaniaBR one"
+msgid "SquidCore Connection"
 msgstr ""
 
 #: src/resources/lang/translations.php:336
-msgid "See preview"
+msgid "Access token"
 msgstr ""
 
 #: src/resources/lang/translations.php:337
-msgid "Product and variation NCM ({count})"
+msgid "Generate it in SquidCore under Integrations › WooCommerce › Synchronization › Generate plugin token. The saved token is never shown again."
 msgstr ""
 
 #: src/resources/lang/translations.php:338
-msgid "What do you want to bring?"
+msgid "{mask} (leave blank to keep)"
 msgstr ""
 
 #: src/resources/lang/translations.php:341
-msgid "Current NCM"
+msgid "Bring the tax data you already have in another invoice plugin."
 msgstr ""
 
 #: src/resources/lang/translations.php:342
-msgid "Edit product"
+msgid "Could not load the import."
 msgstr ""
 
 #: src/resources/lang/translations.php:343
-msgid "Nothing here."
+#: src/resources/lang/translations.php:537
+msgid "Import data"
 msgstr ""
 
 #: src/resources/lang/translations.php:345
-msgid "Why"
+msgid "Check the tax defaults in SquidCore"
 msgstr ""
 
 #: src/resources/lang/translations.php:346
-msgid "Showing the first {count}."
+msgid "WebmaniaBR keeps the CFOP in its tax class, outside WordPress. SquidCore uses {internal} (in-state) and {interstate} (out-of-state) by default, and you can adjust it in the company or in any product."
 msgstr ""
 
 #: src/resources/lang/translations.php:347
-msgid "In WebmaniaBR"
+msgid "CFOP"
 msgstr ""
 
 #: src/resources/lang/translations.php:350
-msgid "WebmaniaBR asks for the CPF/CNPJ at checkout today. Before deactivating it, activate Infixs Checkout Fields or Brazilian Market so the invoices keep the customer document."
+msgid "Use the category NCM on products without their own ({count})"
 msgstr ""
 
 #: src/resources/lang/translations.php:351
-msgid "Check in SquidCore the operation nature (\"{nature}\") and the default origin ({origin})."
+msgid "When the product already has an NCM"
 msgstr ""
 
 #: src/resources/lang/translations.php:352
-msgid "Go to Plugins"
+msgid "Store default NCM ({ncm}) for the remaining products (up to {count})"
 msgstr ""
 
 #: src/resources/lang/translations.php:353
-msgid "Once your invoices go out through SquidCore, deactivate WebmaniaBR. Its NCM codes stay saved in case you want to import again."
+msgid "Recommended only when all your products share the same classification."
 msgstr ""
 
 #: src/resources/lang/translations.php:354
-msgid "Finish the migration"
+msgid "Old NCM from Correios Automático ({count})"
 msgstr ""
 
 #: src/resources/lang/translations.php:355
-msgid "SquidCore can suggest, when issuing, the NCM of the products still without one."
+msgid "Keep the Correios Automático one"
 msgstr ""
 
 #: src/resources/lang/translations.php:356
-msgid "SquidCore can suggest the NCM of the {count} products still without one when issuing."
+msgid "Use the WebmaniaBR one (the one on your invoices)"
 msgstr ""
 
 #: src/resources/lang/translations.php:357
-msgid "SquidCore can suggest the NCM of the product still without one when issuing."
+msgid "Keep the current one (recommended)"
 msgstr ""
 
 #: src/resources/lang/translations.php:358
-msgid "Next steps"
+msgid "Use the WebmaniaBR one"
+msgstr ""
+
+#: src/resources/lang/translations.php:359
+msgid "See preview"
+msgstr ""
+
+#: src/resources/lang/translations.php:360
+msgid "Product and variation NCM ({count})"
 msgstr ""
 
 #: src/resources/lang/translations.php:361
-msgid "When the store uses WebmaniaBR, its NCM codes show up here, ready to import."
+msgid "What do you want to bring?"
 msgstr ""
 
-#: src/resources/lang/translations.php:362
-msgid "No other invoice plugin with data to bring"
+#: src/resources/lang/translations.php:364
+msgid "Current NCM"
 msgstr ""
 
 #: src/resources/lang/translations.php:365
-msgid "Nothing new to bring from WebmaniaBR."
+msgid "Edit product"
 msgstr ""
 
 #: src/resources/lang/translations.php:366
-msgid "Your products already have their NCM"
+msgid "Nothing here."
+msgstr ""
+
+#: src/resources/lang/translations.php:368
+msgid "Why"
 msgstr ""
 
 #: src/resources/lang/translations.php:369
-msgid "Category"
+msgid "Showing the first {count}."
 msgstr ""
 
 #: src/resources/lang/translations.php:370
-msgid "Store default"
-msgstr ""
-
-#: src/resources/lang/translations.php:372
-msgid "Variation"
+msgid "In WebmaniaBR"
 msgstr ""
 
 #: src/resources/lang/translations.php:373
-msgid "Variations"
+msgid "WebmaniaBR asks for the CPF/CNPJ at checkout today. Before deactivating it, activate Infixs Checkout Fields or Brazilian Market so the invoices keep the customer document."
+msgstr ""
+
+#: src/resources/lang/translations.php:374
+msgid "Check in SquidCore the operation nature (\"{nature}\") and the default origin ({origin})."
+msgstr ""
+
+#: src/resources/lang/translations.php:375
+msgid "Go to Plugins"
+msgstr ""
+
+#: src/resources/lang/translations.php:376
+msgid "Once your invoices go out through SquidCore, deactivate WebmaniaBR. Its NCM codes stay saved in case you want to import again."
 msgstr ""
 
 #: src/resources/lang/translations.php:377
-msgid "{ncm} would go to {count} of the {total} products. Check that it is the right classification for all of them."
+msgid "Finish the migration"
 msgstr ""
 
 #: src/resources/lang/translations.php:378
-msgid "Change the choices"
+msgid "SquidCore can suggest, when issuing, the NCM of the products still without one."
 msgstr ""
 
 #: src/resources/lang/translations.php:379
-msgid "Will get an NCM"
+msgid "SquidCore can suggest the NCM of the {count} products still without one when issuing."
 msgstr ""
 
 #: src/resources/lang/translations.php:380
-msgid "{count} of them fix an incomplete NCM"
+msgid "SquidCore can suggest the NCM of the product still without one when issuing."
 msgstr ""
 
 #: src/resources/lang/translations.php:381
-msgid "1 of them fixes an incomplete NCM"
-msgstr ""
-
-#: src/resources/lang/translations.php:382
-msgid "Old NCM from Correios Automático"
-msgstr ""
-
-#: src/resources/lang/translations.php:383
-msgid "{count} products were left out of the WebmaniaBR invoices; they get the NCM too."
+msgid "Next steps"
 msgstr ""
 
 #: src/resources/lang/translations.php:384
-msgid "1 product was left out of the WebmaniaBR invoices; it gets the NCM too."
+msgid "When the store uses WebmaniaBR, its NCM codes show up here, ready to import."
 msgstr ""
 
 #: src/resources/lang/translations.php:385
-msgid "Import {count} products"
-msgstr ""
-
-#: src/resources/lang/translations.php:386
-msgid "Import 1 product"
-msgstr ""
-
-#: src/resources/lang/translations.php:387
-msgid "Already have another NCM and keep it"
+msgid "No other invoice plugin with data to bring"
 msgstr ""
 
 #: src/resources/lang/translations.php:388
-msgid "Still without NCM"
+msgid "Nothing new to bring from WebmaniaBR."
 msgstr ""
 
 #: src/resources/lang/translations.php:389
-msgid "With these choices, no product gets a new NCM."
-msgstr ""
-
-#: src/resources/lang/translations.php:390
-msgid "Nothing new to import"
-msgstr ""
-
-#: src/resources/lang/translations.php:391
-msgid "Will switch to the WebmaniaBR NCM"
+msgid "Your products already have their NCM"
 msgstr ""
 
 #: src/resources/lang/translations.php:392
-msgid "For you to review"
+msgid "Category"
 msgstr ""
 
 #: src/resources/lang/translations.php:393
-msgid "Already the same"
-msgstr ""
-
-#: src/resources/lang/translations.php:394
-msgid "Left out"
+msgid "Store default"
 msgstr ""
 
 #: src/resources/lang/translations.php:395
-msgid "Services, grouped or external products and products whose categories have different NCM codes."
+msgid "Variation"
 msgstr ""
 
 #: src/resources/lang/translations.php:396
-msgid "Preview: nothing was saved yet"
+msgid "Variations"
 msgstr ""
 
-#: src/resources/lang/translations.php:397
-msgid "See list"
+#: src/resources/lang/translations.php:400
+msgid "{ncm} would go to {count} of the {total} products. Check that it is the right classification for all of them."
 msgstr ""
 
-#: src/resources/lang/translations.php:398
-msgid "{count} virtual products get the NCM too."
-msgstr ""
-
-#: src/resources/lang/translations.php:399
-msgid "1 virtual product gets the NCM too."
+#: src/resources/lang/translations.php:401
+msgid "Change the choices"
 msgstr ""
 
 #: src/resources/lang/translations.php:402
-msgid "Importing… {processed} of {total} products."
+msgid "Will get an NCM"
 msgstr ""
 
 #: src/resources/lang/translations.php:403
-msgid "Import progress"
+msgid "{count} of them fix an incomplete NCM"
 msgstr ""
 
 #: src/resources/lang/translations.php:404
-msgid "You can leave this screen: the import goes on in the background."
+msgid "1 of them fixes an incomplete NCM"
 msgstr ""
 
 #: src/resources/lang/translations.php:405
-msgid "Preparing the preview… {processed} of {total} products."
+msgid "Old NCM from Correios Automático"
 msgstr ""
 
 #: src/resources/lang/translations.php:406
-msgid "Stop"
+msgid "{count} products were left out of the WebmaniaBR invoices; they get the NCM too."
 msgstr ""
 
 #: src/resources/lang/translations.php:407
-msgid "Undoing… {processed} of {total} products."
+msgid "1 product was left out of the WebmaniaBR invoices; it gets the NCM too."
+msgstr ""
+
+#: src/resources/lang/translations.php:408
+msgid "Import {count} products"
+msgstr ""
+
+#: src/resources/lang/translations.php:409
+msgid "Import 1 product"
 msgstr ""
 
 #: src/resources/lang/translations.php:410
-msgid "The product categories have different NCM codes."
+msgid "Already have another NCM and keep it"
 msgstr ""
 
 #: src/resources/lang/translations.php:411
-msgid "Saved during the import."
+msgid "Still without NCM"
 msgstr ""
 
 #: src/resources/lang/translations.php:412
-msgid "External product"
+msgid "With these choices, no product gets a new NCM."
 msgstr ""
 
 #: src/resources/lang/translations.php:413
-msgid "Grouped product"
+msgid "Nothing new to import"
 msgstr ""
 
 #: src/resources/lang/translations.php:414
-msgid "\"{raw}\" is not in the official NCM table."
+msgid "Will switch to the WebmaniaBR NCM"
 msgstr ""
 
 #: src/resources/lang/translations.php:415
-msgid "\"{raw}\" is a filler code, not an NCM."
+msgid "For you to review"
 msgstr ""
 
 #: src/resources/lang/translations.php:416
-msgid "\"{raw}\" has {digits} digits, and the NCM has 8. Check the product code."
+msgid "Already the same"
 msgstr ""
 
 #: src/resources/lang/translations.php:417
-msgid "No NCM in WebmaniaBR either."
+msgid "Left out"
 msgstr ""
 
 #: src/resources/lang/translations.php:418
-msgid "Service: WebmaniaBR issued an NFS-e for it."
+msgid "Services, grouped or external products and products whose categories have different NCM codes."
 msgstr ""
 
 #: src/resources/lang/translations.php:419
-msgid "The variations use different NCM codes: choose the product NCM."
+msgid "Preview: nothing was saved yet"
+msgstr ""
+
+#: src/resources/lang/translations.php:420
+msgid "See list"
+msgstr ""
+
+#: src/resources/lang/translations.php:421
+msgid "{count} virtual products get the NCM too."
 msgstr ""
 
 #: src/resources/lang/translations.php:422
-msgid "Import again"
-msgstr ""
-
-#: src/resources/lang/translations.php:423
-msgid "Turn on \"Sync catalog\" to take these NCM codes to SquidCore."
-msgstr ""
-
-#: src/resources/lang/translations.php:424
-msgid "{count} products were saved during the import: run it again to include them."
+msgid "1 virtual product gets the NCM too."
 msgstr ""
 
 #: src/resources/lang/translations.php:425
-msgid "1 product was saved during the import: run it again to include it."
+msgid "Importing… {processed} of {total} products."
 msgstr ""
 
 #: src/resources/lang/translations.php:426
-msgid "Without NCM: {before} before, {after} now"
+msgid "Import progress"
 msgstr ""
 
 #: src/resources/lang/translations.php:427
-msgid "Without NCM: {before} before; counting the products now…"
+msgid "You can leave this screen: the import goes on in the background."
 msgstr ""
 
 #: src/resources/lang/translations.php:428
-msgid "Done! {count} products now have an NCM."
+msgid "Preparing the preview… {processed} of {total} products."
 msgstr ""
 
 #: src/resources/lang/translations.php:429
-msgid "Done! 1 product now has an NCM."
+msgid "Stop"
 msgstr ""
 
 #: src/resources/lang/translations.php:430
-msgid "Last import: {date}"
-msgstr ""
-
-#: src/resources/lang/translations.php:431
-msgid "Undone on {date}"
-msgstr ""
-
-#: src/resources/lang/translations.php:432
-msgid "As soon as you connect, SquidCore receives these NCM codes."
+msgid "Undoing… {processed} of {total} products."
 msgstr ""
 
 #: src/resources/lang/translations.php:433
-msgid "Send NCM to SquidCore"
+msgid "The product categories have different NCM codes."
 msgstr ""
 
 #: src/resources/lang/translations.php:434
-msgid "NCM codes queued to SquidCore."
+msgid "Saved during the import."
 msgstr ""
 
 #: src/resources/lang/translations.php:435
-msgid "{count} products are in the queue to SquidCore."
+msgid "External product"
 msgstr ""
 
 #: src/resources/lang/translations.php:436
-msgid "1 product is in the queue to SquidCore."
+msgid "Grouped product"
 msgstr ""
 
 #: src/resources/lang/translations.php:437
-msgid "{count} products are left for you to review."
+msgid "\"{raw}\" is not in the official NCM table."
 msgstr ""
 
 #: src/resources/lang/translations.php:438
-msgid "1 product is left for you to review."
+msgid "\"{raw}\" is a filler code, not an NCM."
 msgstr ""
 
 #: src/resources/lang/translations.php:439
-msgid "See the last import"
+msgid "\"{raw}\" has {digits} digits, and the NCM has 8. Check the product code."
 msgstr ""
 
 #: src/resources/lang/translations.php:440
-msgid "Undo this import"
+msgid "No NCM in WebmaniaBR either."
 msgstr ""
 
-#: src/resources/lang/translations.php:443
-msgid "Active"
+#: src/resources/lang/translations.php:441
+msgid "Service: WebmaniaBR issued an NFS-e for it."
 msgstr ""
 
-#: src/resources/lang/translations.php:444
-msgid "Analyze again"
+#: src/resources/lang/translations.php:442
+msgid "The variations use different NCM codes: choose the product NCM."
 msgstr ""
 
 #: src/resources/lang/translations.php:445
-msgid "Analyzing your products… {processed} of {total}"
+msgid "Import again"
 msgstr ""
 
 #: src/resources/lang/translations.php:446
-msgid "Analyzing your products…"
+msgid "Turn on \"Sync catalog\" to take these NCM codes to SquidCore."
 msgstr ""
 
 #: src/resources/lang/translations.php:447
-msgid "{count} categories with NCM"
+msgid "{count} products were saved during the import: run it again to include them."
 msgstr ""
 
 #: src/resources/lang/translations.php:448
-msgid "1 category with NCM"
+msgid "1 product was saved during the import: run it again to include it."
 msgstr ""
 
 #: src/resources/lang/translations.php:449
-msgid "Deactivated, with data"
+msgid "Without NCM: {before} before, {after} now"
 msgstr ""
 
 #: src/resources/lang/translations.php:450
-msgid "WebmaniaBR (Nota Fiscal Eletrônica WooCommerce)"
+msgid "Without NCM: {before} before; counting the products now…"
 msgstr ""
 
 #: src/resources/lang/translations.php:451
-msgid "{count} products with NCM"
+msgid "Done! {count} products now have an NCM."
 msgstr ""
 
 #: src/resources/lang/translations.php:452
-msgid "1 product with NCM"
+msgid "Done! 1 product now has an NCM."
+msgstr ""
+
+#: src/resources/lang/translations.php:453
+msgid "Last import: {date}"
+msgstr ""
+
+#: src/resources/lang/translations.php:454
+msgid "Undone on {date}"
 msgstr ""
 
 #: src/resources/lang/translations.php:455
-msgid "Continue"
+msgid "As soon as you connect, SquidCore receives these NCM codes."
 msgstr ""
 
 #: src/resources/lang/translations.php:456
-msgid "The import stopped at product {processed} of {total}. Your data is safe: continue from where it stopped."
+msgid "Send NCM to SquidCore"
 msgstr ""
 
 #: src/resources/lang/translations.php:457
-msgid "The preview stopped at product {processed} of {total}. Continue from where it stopped."
+msgid "NCM codes queued to SquidCore."
 msgstr ""
 
 #: src/resources/lang/translations.php:458
-msgid "The undo stopped at product {processed} of {total}. Continue from where it stopped."
+msgid "{count} products are in the queue to SquidCore."
 msgstr ""
 
 #: src/resources/lang/translations.php:459
-msgid "Import paused"
+msgid "1 product is in the queue to SquidCore."
 msgstr ""
 
 #: src/resources/lang/translations.php:460
-msgid "Preview paused"
+msgid "{count} products are left for you to review."
 msgstr ""
 
 #: src/resources/lang/translations.php:461
-msgid "Undo paused"
+msgid "1 product is left for you to review."
 msgstr ""
 
-#: src/resources/lang/translations.php:464
-msgid "Undo"
+#: src/resources/lang/translations.php:462
+msgid "See the last import"
 msgstr ""
 
-#: src/resources/lang/translations.php:465
-msgid "{count} products went back to their previous NCM."
+#: src/resources/lang/translations.php:463
+msgid "Undo this import"
 msgstr ""
 
 #: src/resources/lang/translations.php:466
-msgid "1 product went back to its previous NCM."
+msgid "Active"
 msgstr ""
 
 #: src/resources/lang/translations.php:467
-msgid "{count} products edited later were kept."
+msgid "Analyze again"
 msgstr ""
 
 #: src/resources/lang/translations.php:468
-msgid "1 product edited later was kept."
+msgid "Analyzing your products… {processed} of {total}"
 msgstr ""
 
 #: src/resources/lang/translations.php:469
-msgid "In SquidCore, the {count} products that already received the NCM keep it: adjust them in the panel if needed."
+msgid "Analyzing your products…"
 msgstr ""
 
 #: src/resources/lang/translations.php:470
-msgid "In SquidCore, the product that already received the NCM keeps it: adjust it in the panel if needed."
+msgid "{count} categories with NCM"
 msgstr ""
 
 #: src/resources/lang/translations.php:471
-msgid "Products go back to the NCM they had here in the store. The ones you edited afterwards stay as they are."
+msgid "1 category with NCM"
 msgstr ""
 
 #: src/resources/lang/translations.php:472
-msgid "Undo this import?"
+msgid "Deactivated, with data"
 msgstr ""
 
-#: src/resources/lang/translations.php:476
-msgid "When a product has no NCM, the AI suggests one and the emission is tried once more. Review the suggestions in SquidCore."
+#: src/resources/lang/translations.php:473
+msgid "WebmaniaBR (Nota Fiscal Eletrônica WooCommerce)"
 msgstr ""
 
-#: src/resources/lang/translations.php:477
-msgid "Fill the missing NCM with the AI of SquidCore"
+#: src/resources/lang/translations.php:474
+msgid "{count} products with NCM"
+msgstr ""
+
+#: src/resources/lang/translations.php:475
+msgid "1 product with NCM"
 msgstr ""
 
 #: src/resources/lang/translations.php:478
-msgid "Available after you connect OpenAI or Claude in SquidCore. Then test the connection again here."
+msgid "Continue"
+msgstr ""
+
+#: src/resources/lang/translations.php:479
+msgid "The import stopped at product {processed} of {total}. Your data is safe: continue from where it stopped."
 msgstr ""
 
 #: src/resources/lang/translations.php:480
-msgid "Correios Automático"
+msgid "The preview stopped at product {processed} of {total}. Continue from where it stopped."
 msgstr ""
 
 #: src/resources/lang/translations.php:481
-msgid "The pre-posting goes out with the number and key of the invoice as soon as it is authorized."
+msgid "The undo stopped at product {processed} of {total}. Continue from where it stopped."
 msgstr ""
 
 #: src/resources/lang/translations.php:482
-msgid "Wait for the invoice before the automatic pre-posting of Correios"
+msgid "Import paused"
 msgstr ""
 
 #: src/resources/lang/translations.php:483
-msgid "Requires Correios Automático PRO, which makes the automatic pre-posting."
+msgid "Preview paused"
 msgstr ""
 
 #: src/resources/lang/translations.php:484
-msgid "Needs a version of Correios Automático PRO that can wait for the invoice. Update Correios Automático PRO to use it."
-msgstr ""
-
-#: src/resources/lang/translations.php:486
-msgid "Waiting gives time to change or cancel the order before the invoice exists. Orders cancelled while waiting get no invoice."
+msgid "Undo paused"
 msgstr ""
 
 #: src/resources/lang/translations.php:487
-msgid "SquidCore issues the NF-e of the paid orders with the tax data of your organization."
+msgid "Undo"
 msgstr ""
 
 #: src/resources/lang/translations.php:488
-msgid "The customer always finds the invoice in the order details of My Account."
+msgid "{count} products went back to their previous NCM."
 msgstr ""
 
 #: src/resources/lang/translations.php:489
-msgid "DANFE and XML links in the completed order e-mail"
+msgid "1 product went back to its previous NCM."
 msgstr ""
 
 #: src/resources/lang/translations.php:490
-msgid "Turned off, invoices are issued only when you click \"Issue now\" on the order screen."
+msgid "{count} products edited later were kept."
 msgstr ""
 
 #: src/resources/lang/translations.php:491
-msgid "Issue the NF-e automatically after the payment"
+msgid "1 product edited later was kept."
 msgstr ""
 
 #: src/resources/lang/translations.php:492
-msgid "The saved access token cannot issue invoices: it was generated before NF-e support. Generate a new token in SquidCore and save it in Connection."
+msgid "In SquidCore, the {count} products that already received the NCM keep it: adjust them in the panel if needed."
 msgstr ""
 
 #: src/resources/lang/translations.php:493
-msgid "The SquidCore connection cannot issue invoices: the NF-e permissions were not approved. Reconnect with SquidCore and approve every permission."
+msgid "In SquidCore, the product that already received the NCM keeps it: adjust it in the panel if needed."
 msgstr ""
 
 #: src/resources/lang/translations.php:494
-msgid "Missing NCM"
+msgid "Products go back to the NCM they had here in the store. The ones you edited afterwards stay as they are."
 msgstr ""
 
 #: src/resources/lang/translations.php:495
-msgid "{count} products are still without NCM."
-msgstr ""
-
-#: src/resources/lang/translations.php:496
-msgid "1 product is still without NCM."
-msgstr ""
-
-#: src/resources/lang/translations.php:497
-msgid "This store is not connected to SquidCore. No invoice is issued until the connection is confirmed."
-msgstr ""
-
-#: src/resources/lang/translations.php:498
-msgid "Order sync is turned off. Each order is still sent to SquidCore right before its invoice is issued."
+msgid "Undo this import?"
 msgstr ""
 
 #: src/resources/lang/translations.php:499
-msgid "Invoices (NF-e)"
+msgid "When a product has no NCM, the AI suggests one and the emission is tried once more. Review the suggestions in SquidCore."
 msgstr ""
 
 #: src/resources/lang/translations.php:500
-msgid "When to issue"
+msgid "Fill the missing NCM with the AI of SquidCore"
+msgstr ""
+
+#: src/resources/lang/translations.php:501
+msgid "Available after you connect OpenAI or Claude in SquidCore. Then test the connection again here."
 msgstr ""
 
 #: src/resources/lang/translations.php:503
-msgid "Catalog"
+msgid "Correios Automático"
 msgstr ""
 
 #: src/resources/lang/translations.php:504
-msgid "Products, variations and categories created, changed or deleted in the store."
+msgid "The pre-posting goes out with the number and key of the invoice as soon as it is authorized."
 msgstr ""
 
 #: src/resources/lang/translations.php:505
-msgid "Sync catalog (products and categories)"
+msgid "Wait for the invoice before the automatic pre-posting of Correios"
 msgstr ""
 
 #: src/resources/lang/translations.php:506
-msgid "Choose what this store sends to SquidCore."
+msgid "Requires Correios Automático PRO, which makes the automatic pre-posting."
 msgstr ""
 
-#: src/resources/lang/translations.php:508
-msgid "New orders, status changes and confirmed payments."
+#: src/resources/lang/translations.php:507
+msgid "Needs a version of Correios Automático PRO that can wait for the invoice. Update Correios Automático PRO to use it."
 msgstr ""
 
 #: src/resources/lang/translations.php:509
-msgid "Sync orders"
+msgid "Waiting gives time to change or cancel the order before the invoice exists. Orders cancelled while waiting get no invoice."
+msgstr ""
+
+#: src/resources/lang/translations.php:510
+msgid "SquidCore issues the NF-e of the paid orders with the tax data of your organization."
+msgstr ""
+
+#: src/resources/lang/translations.php:511
+msgid "The customer always finds the invoice in the order details of My Account."
+msgstr ""
+
+#: src/resources/lang/translations.php:512
+msgid "DANFE and XML links in the completed order e-mail"
+msgstr ""
+
+#: src/resources/lang/translations.php:513
+msgid "Turned off, invoices are issued only when you click \"Issue now\" on the order screen."
+msgstr ""
+
+#: src/resources/lang/translations.php:514
+msgid "Issue the NF-e automatically after the payment"
+msgstr ""
+
+#: src/resources/lang/translations.php:515
+msgid "The saved access token cannot issue invoices: it was generated before NF-e support. Generate a new token in SquidCore and save it in Connection."
+msgstr ""
+
+#: src/resources/lang/translations.php:516
+msgid "The SquidCore connection cannot issue invoices: the NF-e permissions were not approved. Reconnect with SquidCore and approve every permission."
+msgstr ""
+
+#: src/resources/lang/translations.php:517
+msgid "Missing NCM"
+msgstr ""
+
+#: src/resources/lang/translations.php:518
+msgid "{count} products are still without NCM."
+msgstr ""
+
+#: src/resources/lang/translations.php:519
+msgid "1 product is still without NCM."
 msgstr ""
 
 #: src/resources/lang/translations.php:520
-msgid "Generate token in SquidCore"
+msgid "This store is not connected to SquidCore. No invoice is issued until the connection is confirmed."
 msgstr ""
 
 #: src/resources/lang/translations.php:521
-msgid "Help"
+msgid "Order sync is turned off. Each order is still sent to SquidCore right before its invoice is issued."
 msgstr ""
 
 #: src/resources/lang/translations.php:522
-msgid "WhatsApp Support"
+msgid "Invoices (NF-e)"
 msgstr ""
 
-#: src/resources/lang/translations.php:525
-msgid "Showing {showing} of {total} · Page {page} of {pages}"
+#: src/resources/lang/translations.php:523
+msgid "When to issue"
+msgstr ""
+
+#: src/resources/lang/translations.php:526
+msgid "Catalog"
+msgstr ""
+
+#: src/resources/lang/translations.php:527
+msgid "Products, variations and categories created, changed or deleted in the store."
 msgstr ""
 
 #: src/resources/lang/translations.php:528
-msgid "I changed my mind"
+msgid "Sync catalog (products and categories)"
 msgstr ""
 
 #: src/resources/lang/translations.php:529
-msgid "It's a shame you are about to deactivate SquidCore. If you have any questions or issues, please contact support."
-msgstr ""
-
-#: src/resources/lang/translations.php:530
-msgid "Write a comment, suggestion or question (optional)"
+msgid "Choose what this store sends to SquidCore."
 msgstr ""
 
 #: src/resources/lang/translations.php:531
-msgid "Your email (optional)"
+msgid "New orders, status changes and confirmed payments."
 msgstr ""
 
 #: src/resources/lang/translations.php:532
-msgid "Invalid email or leave empty."
-msgstr ""
-
-#: src/resources/lang/translations.php:533
-msgid "Select a reason"
-msgstr ""
-
-#: src/resources/lang/translations.php:534
-msgid "Select a reason."
-msgstr ""
-
-#: src/resources/lang/translations.php:535
-msgid "Skip & deactivate"
-msgstr ""
-
-#: src/resources/lang/translations.php:536
-msgid "Submit & deactivate"
-msgstr ""
-
-#: src/resources/lang/translations.php:537
-msgid "Can we help you?"
-msgstr ""
-
-#: src/resources/lang/translations.php:539
-msgid "The plugin broke my site"
-msgstr ""
-
-#: src/resources/lang/translations.php:540
-msgid "Conflict with other plugins"
-msgstr ""
-
-#: src/resources/lang/translations.php:541
-msgid "It did not meet my expectations"
-msgstr ""
-
-#: src/resources/lang/translations.php:542
-msgid "I found a better plugin"
+msgid "Sync orders"
 msgstr ""
 
 #: src/resources/lang/translations.php:543
-msgid "I am testing"
+msgid "Generate token in SquidCore"
 msgstr ""
 
 #: src/resources/lang/translations.php:544
-msgid "I no longer need the plugin"
+msgid "Help"
 msgstr ""
 
 #: src/resources/lang/translations.php:545
+msgid "WhatsApp Support"
+msgstr ""
+
+#: src/resources/lang/translations.php:548
+msgid "Showing {showing} of {total} · Page {page} of {pages}"
+msgstr ""
+
+#: src/resources/lang/translations.php:551
+msgid "I changed my mind"
+msgstr ""
+
+#: src/resources/lang/translations.php:552
+msgid "It's a shame you are about to deactivate SquidCore. If you have any questions or issues, please contact support."
+msgstr ""
+
+#: src/resources/lang/translations.php:553
+msgid "Write a comment, suggestion or question (optional)"
+msgstr ""
+
+#: src/resources/lang/translations.php:554
+msgid "Your email (optional)"
+msgstr ""
+
+#: src/resources/lang/translations.php:555
+msgid "Invalid email or leave empty."
+msgstr ""
+
+#: src/resources/lang/translations.php:556
+msgid "Select a reason"
+msgstr ""
+
+#: src/resources/lang/translations.php:557
+msgid "Select a reason."
+msgstr ""
+
+#: src/resources/lang/translations.php:558
+msgid "Skip & deactivate"
+msgstr ""
+
+#: src/resources/lang/translations.php:559
+msgid "Submit & deactivate"
+msgstr ""
+
+#: src/resources/lang/translations.php:560
+msgid "Can we help you?"
+msgstr ""
+
+#: src/resources/lang/translations.php:562
+msgid "The plugin broke my site"
+msgstr ""
+
+#: src/resources/lang/translations.php:563
+msgid "Conflict with other plugins"
+msgstr ""
+
+#: src/resources/lang/translations.php:564
+msgid "It did not meet my expectations"
+msgstr ""
+
+#: src/resources/lang/translations.php:565
+msgid "I found a better plugin"
+msgstr ""
+
+#: src/resources/lang/translations.php:566
+msgid "I am testing"
+msgstr ""
+
+#: src/resources/lang/translations.php:567
+msgid "I no longer need the plugin"
+msgstr ""
+
+#: src/resources/lang/translations.php:568
 msgid "Other"
 msgstr ""
 
-#: src/resources/lang/translations.php:546
+#: src/resources/lang/translations.php:569
 msgid "The plugin stopped working suddenly"
 msgstr ""
 
-#: src/resources/views/admin/invoice-meta-box.php:40
+#: src/resources/views/admin/invoice-meta-box.php:45
 msgid "Save the order to issue its invoice."
 msgstr ""
 
-#: src/resources/views/admin/invoice-meta-box.php:58
+#: src/resources/views/admin/invoice-meta-box.php:63
 msgid "No invoice was issued for this order yet."
 msgstr ""
 
 #. translators: %s: date and time of the emission.
-#: src/resources/views/admin/invoice-meta-box.php:63
+#: src/resources/views/admin/invoice-meta-box.php:68
 #, php-format
 msgid "Automatic emission scheduled for %s."
 msgstr ""
 
-#: src/resources/views/admin/invoice-meta-box.php:67
+#: src/resources/views/admin/invoice-meta-box.php:72
 msgid "Sending the invoice to SquidCore."
 msgstr ""
 
-#: src/resources/views/admin/invoice-meta-box.php:72
+#: src/resources/views/admin/invoice-meta-box.php:77
 msgid "SEFAZ is taking longer than usual. Click \"Refresh\" to check again."
 msgstr ""
 
-#: src/resources/views/admin/invoice-meta-box.php:73
+#: src/resources/views/admin/invoice-meta-box.php:78
 msgid "Waiting for SEFAZ to authorize the invoice."
 msgstr ""
 
-#: src/resources/views/admin/invoice-meta-box.php:80
+#: src/resources/views/admin/invoice-meta-box.php:85
 msgid "Number / series"
 msgstr ""
 
-#: src/resources/views/admin/invoice-meta-box.php:83
+#: src/resources/views/admin/invoice-meta-box.php:88
 msgid "Access key"
 msgstr ""
 
-#: src/resources/views/admin/invoice-meta-box.php:87
+#: src/resources/views/admin/invoice-meta-box.php:92
 msgid "Issued on"
 msgstr ""
 
 #. translators: %s: date and time.
-#: src/resources/views/admin/invoice-meta-box.php:96
+#: src/resources/views/admin/invoice-meta-box.php:101
 #, php-format
 msgid "Can be cancelled until %s."
 msgstr ""
 
-#: src/resources/views/admin/invoice-meta-box.php:97
+#: src/resources/views/admin/invoice-meta-box.php:102
 msgid "The cancellation window has ended. To undo it, issue a return invoice (NF-e de devolução) in SquidCore."
 msgstr ""
 
 #. translators: %s: product name.
-#: src/resources/views/admin/invoice-meta-box.php:119
+#: src/resources/views/admin/invoice-meta-box.php:150
 #, php-format
 msgid "Edit %s"
 msgstr ""
 
-#: src/resources/views/admin/invoice-meta-box.php:142
+#: src/resources/views/admin/invoice-meta-box.php:173
 msgid "Fill NCM with AI"
 msgstr ""
 
-#: src/resources/views/admin/invoice-meta-box.php:152
+#: src/resources/views/admin/invoice-meta-box.php:183
 msgid "Simplified DANFE"
 msgstr ""
 
 #. translators: %d: minimum number of characters.
-#: src/resources/views/admin/invoice-meta-box.php:172
+#: src/resources/views/admin/invoice-meta-box.php:203
 #, php-format
 msgid "At least %d characters."
 msgstr ""

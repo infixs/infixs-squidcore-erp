@@ -92,6 +92,17 @@ class InvoiceApi {
 	}
 
 	/**
+	 * Invoices (NF-e and NFC-e) authorized in the current period against the limit of the plan, as the plan meter of
+	 * SquidCore counts them. A SquidCore version without the route answers 404.
+	 *
+	 * @return array|\WP_Error {metric, used, limit (null: no limit), enforcement (ENFORCED, SHADOW or OFF),
+	 *                         periodStart, periodEnd}
+	 */
+	public function usage() {
+		return $this->data( $this->client->get( self::BASE . '/nfe/usage' ) );
+	}
+
+	/**
 	 * @param string $justificativa Reason for SEFAZ, 15 to 255 characters.
 	 * @param string $invoiceId Blank cancels the current invoice of the order.
 	 *

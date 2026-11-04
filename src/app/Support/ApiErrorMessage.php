@@ -84,7 +84,7 @@ class ApiErrorMessage {
 
 		switch ( $code ) {
 			case 'PLAN_LIMIT_REACHED':
-				return __( 'The invoice limit of your SquidCore plan was reached. Upgrade your plan and try again.', 'infixs-squidcore-erp' );
+				return self::planLimitMessage( $error );
 			case 'MODULE_NOT_IN_PLAN':
 				return __( 'Your SquidCore plan does not include invoices (NF-e). Upgrade your plan to issue them.', 'infixs-squidcore-erp' );
 			case 'ACCOUNT_SUSPENDED':
@@ -303,6 +303,26 @@ class ApiErrorMessage {
 
 		/* translators: %s: permission keys of SquidCore, e.g. "customers.write". */
 		return sprintf( __( 'The user who generated the token does not have the SquidCore permission this action needs (%s). Generate the token with a user who has it.', 'infixs-squidcore-erp' ), $keys );
+	}
+
+	/**
+	 * The monthly invoice limit of the plan, with the use of the month when the 402 tells it.
+	 */
+	private static function planLimitMessage( \WP_Error $error ): string {
+		$body = self::body( $error );
+		$metric = $body['metric'] ?? '';
+		$monthly = $metric === '' || $metric === 'taxInvoicesPerMonth';
+
+		if ( $monthly && isset( $body['limit'], $body['used'] ) && is_numeric( $body['limit'] ) && is_numeric( $body['used'] ) ) {
+			return sprintf(
+				/* translators: 1: invoices issued this month, 2: invoices the plan allows per month. */
+				__( 'The invoice limit of your SquidCore plan was reached (%1$d of %2$d this month). Upgrade your plan and try again.', 'infixs-squidcore-erp' ),
+				(int) $body['used'],
+				(int) $body['limit']
+			);
+		}
+
+		return __( 'The invoice limit of your SquidCore plan was reached. Upgrade your plan and try again.', 'infixs-squidcore-erp' );
 	}
 
 	/**

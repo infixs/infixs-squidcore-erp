@@ -52,6 +52,11 @@
 	margin: 0 0 10px;
 }
 
+/* SEFAZ messages carry the 44-digit access key in one piece: it must wrap inside the narrow box. */
+.isq-invoice__message {
+	overflow-wrap: anywhere;
+}
+
 .isq-invoice__hint {
 	color: #646970;
 }
@@ -77,6 +82,29 @@
 	font-size: 11px;
 	font-weight: 400 !important;
 	word-break: break-word;
+}
+
+.isq-invoice__advice {
+	margin: 0 0 10px;
+	padding: 8px 10px;
+	border-left: 4px solid #dba617;
+	background: #fcf9e8;
+}
+
+.isq-invoice__advice p {
+	margin: 0 0 6px;
+}
+
+.isq-invoice__advice-title {
+	font-weight: 600;
+}
+
+.isq-invoice__advice-steps {
+	margin: 0 0 8px 18px;
+}
+
+.isq-invoice__advice-steps li {
+	margin-bottom: 4px;
 }
 
 .isq-invoice__reasons {

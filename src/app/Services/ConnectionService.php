@@ -31,6 +31,13 @@ class ConnectionService {
 
 	private const HANDSHAKE_ENDPOINT = 'integrations/apps/woocommerce/handshake';
 
+	/**
+	 * Remembers that SquidCore was asked about the saved connection a moment ago.
+	 */
+	public const VERIFY_TRANSIENT = 'infixs_squidcore_connection_verified';
+
+	private const VERIFY_INTERVAL = 5 * MINUTE_IN_SECONDS;
+
 	private const ORGANIZATION_ENDPOINT = 'organizations/summary';
 
 	/**
@@ -189,7 +196,7 @@ class ConnectionService {
 		$this->settings->delete( 'connection.api_url' );
 
 		if ( $is_new_connection ) {
-			$this->forgetPushHistory();
+			$this->forgetConnectionHistory();
 		}
 
 		return $this->check( $this->credentials, true );
@@ -221,6 +228,30 @@ class ConnectionService {
 	}
 
 	/**
+	 * Asks SquidCore, at most once every few minutes for the whole store, whether it still accepts the saved connection,
+	 * so a revoked connection shows while the panel is open even if nothing else is sent. Only a refusal changes the
+	 * connection: a failure of the network says nothing about it.
+	 */
+	public function verify(): void {
+		if ( ! $this->isConnected() || get_transient( self::VERIFY_TRANSIENT ) !== false ) {
+			return;
+		}
+
+		set_transient( self::VERIFY_TRANSIENT, '1', self::VERIFY_INTERVAL );
+
+		$response = $this->askHandshake( ( $this->makeClient )( $this->urls->apiUrl(), $this->credentials ) );
+
+		if ( ! is_wp_error( $response ) || ApiErrorMessage::status( $response ) !== 401 ) {
+			return;
+		}
+
+		$this->settings->update( 'connection', [
+			'connected' => false,
+			'last_error' => ApiErrorMessage::describe( $response ),
+		] );
+	}
+
+	/**
 	 * The store was just connected through "Conectar com SquidCore": the plugin token of the manual connection gives
 	 * way, the outcome of the pushes starts over and the connection is checked.
 	 *
@@ -240,7 +271,7 @@ class ConnectionService {
 			'wc_key_id' => 0,
 		] );
 
-		$this->forgetPushHistory();
+		$this->forgetConnectionHistory();
 
 		return $this->check( $this->credentials, true );
 	}
@@ -269,18 +300,26 @@ class ConnectionService {
 			'wc_key_id' => 0,
 		] );
 
-		$this->forgetPushHistory();
+		$this->forgetConnectionHistory();
 
 		return $warning;
 	}
 
 	/**
-	 * The outcome and the activity of the pushes belong to the connection they went through: whenever the store
-	 * points to another one (new credential, other API, none), the dashboard starts over.
+	 * The outcome and the activity of the pushes, and whatever was read through the connection, belong to it: whenever
+	 * the store points to another one (new credential, other API, none), the dashboard starts over.
 	 */
-	private function forgetPushHistory(): void {
+	private function forgetConnectionHistory(): void {
 		$this->syncStatus->clear();
 		$this->activity->clear();
+
+		/**
+		 * Fires when the store points to another SquidCore connection (new credential, other API, none): what was read
+		 * through the previous one (the account, its plan, its use) no longer holds.
+		 *
+		 * @since 1.5.0
+		 */
+		do_action( 'infixs_squidcore_connection_changed' );
 	}
 
 	/**
@@ -460,7 +499,7 @@ class ConnectionService {
 		if ( $persist ) {
 			// The history of the pushes belongs to the API they went to.
 			if ( $this->settings->string( 'connection.checked_api_url', '' ) !== $this->urls->apiUrl() ) {
-				$this->forgetPushHistory();
+				$this->forgetConnectionHistory();
 			}
 
 			$this->settings->update( 'connection', [
@@ -492,10 +531,7 @@ class ConnectionService {
 		/** @var SquidCoreClient $client */
 		$client = ( $this->makeClient )( $this->urls->apiUrl(), $credential );
 
-		$response = $client->post( self::HANDSHAKE_ENDPOINT, [
-			'siteUrl' => home_url(),
-			'pluginVersion' => $this->pluginVersion,
-		] );
+		$response = $this->askHandshake( $client );
 
 		$connected = ! is_wp_error( $response ) && ! empty( $response['data']['connected'] );
 
@@ -514,6 +550,18 @@ class ConnectionService {
 			'organization' => $connected ? $this->fetchOrganization( $client, $credential->method() ) : null,
 			'data' => ! is_wp_error( $response ) && isset( $response['data'] ) && is_array( $response['data'] ) ? $response['data'] : null,
 		];
+	}
+
+	/**
+	 * @param SquidCoreClient $client
+	 *
+	 * @return array|\WP_Error The answer of SquidCore.
+	 */
+	private function askHandshake( SquidCoreClient $client ) {
+		return $client->post( self::HANDSHAKE_ENDPOINT, [
+			'siteUrl' => home_url(),
+			'pluginVersion' => $this->pluginVersion,
+		] );
 	}
 
 	/**

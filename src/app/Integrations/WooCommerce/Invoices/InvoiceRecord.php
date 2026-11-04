@@ -32,6 +32,18 @@ class InvoiceRecord {
 	public const ATTENTION_PREPOST_USES_CANCELLED_INVOICE = 'prepost_uses_cancelled_invoice';
 
 	/**
+	 * Why a failed emission failed, when the store owner can do something about it for every order at once: the
+	 * invoice limit of the SquidCore plan was reached (402 PLAN_LIMIT_REACHED).
+	 */
+	public const FAILURE_PLAN_LIMIT = 'plan_limit';
+
+	/**
+	 * Why a failed emission failed: SquidCore refused every invoice of the account (any other 402: the subscription
+	 * suspended or restricted for a pending payment, a plan without invoices).
+	 */
+	public const FAILURE_ACCOUNT = 'account';
+
+	/**
 	 * Hours after the authorization in which SEFAZ accepts the cancellation.
 	 */
 	public const CANCEL_WINDOW_HOURS = 24;
@@ -76,6 +88,8 @@ class InvoiceRecord {
 		'aiRetried' => false,
 		'productsPushed' => false,
 		'transient' => false,
+		'failureCode' => '',
+		'planLimit' => [],
 		'scheduledAt' => 0,
 		'emitAttempts' => 0,
 		'pollAttempt' => 0,
@@ -116,7 +130,8 @@ class InvoiceRecord {
 	}
 
 	/**
-	 * Moves to a state. Leaving a state forgets what only made sense there (the message, the blocking reasons).
+	 * Moves to a state. Leaving a state forgets what only made sense there (the message, the blocking reasons, why the
+	 * emission failed).
 	 */
 	public function setState( string $state, string $message = '' ): self {
 		if ( $state !== $this->state() ) {
@@ -126,6 +141,8 @@ class InvoiceRecord {
 		$this->data['state'] = $state;
 		$this->data['message'] = $message;
 		$this->data['transient'] = false;
+		$this->data['failureCode'] = '';
+		$this->data['planLimit'] = [];
 
 		if ( $state !== self::BLOCKED ) {
 			$this->data['reasons'] = [];
@@ -195,6 +212,34 @@ class InvoiceRecord {
 		return $this;
 	}
 
+	/**
+	 * The emission failed because the invoice limit of the SquidCore plan was reached. Keeps what the 402 told (the
+	 * metric, the limit and the use of the period) for the texts.
+	 *
+	 * @param array $denial Body of the 402 (EntitlementDeniedBody): metric, limit (null: no limit), used.
+	 */
+	public function setPlanLimitFailure( string $message, array $denial ): self {
+		$this->setFailed( $message );
+		$this->data['failureCode'] = self::FAILURE_PLAN_LIMIT;
+		$this->data['planLimit'] = [
+			'metric' => is_string( $denial['metric'] ?? null ) ? (string) preg_replace( '/[^A-Za-z0-9_]/', '', $denial['metric'] ) : '',
+			'limit' => isset( $denial['limit'] ) && is_numeric( $denial['limit'] ) ? (int) $denial['limit'] : null,
+			'used' => isset( $denial['used'] ) && is_numeric( $denial['used'] ) ? (int) $denial['used'] : null,
+		];
+
+		return $this;
+	}
+
+	/**
+	 * The emission failed because SquidCore refused every invoice of the account (FAILURE_ACCOUNT).
+	 */
+	public function setAccountFailure( string $message ): self {
+		$this->setFailed( $message );
+		$this->data['failureCode'] = self::FAILURE_ACCOUNT;
+
+		return $this;
+	}
+
 	public function setScheduled( int $timestamp ): self {
 		$this->setState( self::SCHEDULED );
 		$this->data['scheduledAt'] = $timestamp;
@@ -257,6 +302,31 @@ class InvoiceRecord {
 		return $this->is( self::FAILED ) && (bool) $this->data['transient'];
 	}
 
+	/**
+	 * Why the emission failed (FAILURE_PLAN_LIMIT, FAILURE_ACCOUNT), blank for any other failure and outside the
+	 * failed state.
+	 */
+	public function failureCode(): string {
+		return $this->is( self::FAILED ) ? (string) $this->data['failureCode'] : '';
+	}
+
+	public function isPlanLimitFailure(): bool {
+		return $this->failureCode() === self::FAILURE_PLAN_LIMIT;
+	}
+
+	public function isAccountFailure(): bool {
+		return $this->failureCode() === self::FAILURE_ACCOUNT;
+	}
+
+	/**
+	 * What the 402 of the plan limit told, empty unless the emission failed for it.
+	 *
+	 * @return array{metric: string, limit: int|null, used: int|null}|array{}
+	 */
+	public function planLimit(): array {
+		return $this->isPlanLimitFailure() && is_array( $this->data['planLimit'] ) ? $this->data['planLimit'] : [];
+	}
+
 	public function attention(): string {
 		return (string) $this->data['attention'];
 	}
@@ -299,6 +369,18 @@ class InvoiceRecord {
 
 	public function environment(): string {
 		return (string) $this->data['environment'];
+	}
+
+	/**
+	 * The rejection of SEFAZ the store owner can fix (e.g. a number another system already used), read from the last
+	 * answer of SquidCore. Null unless the invoice was rejected or denied with one of the known causes.
+	 */
+	public function rejection(): ?SefazRejection {
+		if ( ! $this->is( self::ERROR, self::DENIED ) ) {
+			return null;
+		}
+
+		return SefazRejection::classify( (string) $this->data['sefazStatus'], (string) $this->data['sefazMessage'] );
 	}
 
 	public function authorizedAt(): string {

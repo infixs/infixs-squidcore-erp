@@ -8,6 +8,7 @@ use Infixs\SquidCore\AvelPress\Support\ServiceProvider;
 use Infixs\SquidCore\Admin\OAuthCallback;
 use Infixs\SquidCore\Integrations\CorreiosAutomatico\CorreiosAutomatico;
 use Infixs\SquidCore\Integrations\CorreiosAutomatico\CorreiosInvoiceBridge;
+use Infixs\SquidCore\Integrations\CorreiosAutomatico\CorreiosTrackingCodes;
 use Infixs\SquidCore\Integrations\WebmaniaBR\WebmaniaBR;
 use Infixs\SquidCore\Integrations\WebmaniaBR\WebmaniaFiscalSource;
 use Infixs\SquidCore\Integrations\WebmaniaBR\WebmaniaInvoiceBridge;
@@ -38,6 +39,10 @@ use Infixs\SquidCore\Integrations\WooCommerce\Invoices\InvoiceScheduler;
 use Infixs\SquidCore\Integrations\WooCommerce\Invoices\InvoiceService;
 use Infixs\SquidCore\Integrations\WooCommerce\Invoices\InvoiceSettings;
 use Infixs\SquidCore\Integrations\WooCommerce\Invoices\NfeNumberingApi;
+use Infixs\SquidCore\Integrations\WooCommerce\Invoices\PlanLimit\InvoiceUsage;
+use Infixs\SquidCore\Integrations\WooCommerce\Invoices\PlanLimit\PlanLimitRetry;
+use Infixs\SquidCore\Integrations\WooCommerce\Invoices\PlanLimit\PlanLimitStatus;
+use Infixs\SquidCore\Integrations\WooCommerce\Invoices\SefazRejectionAdvice;
 use Infixs\SquidCore\Integrations\WooCommerce\FeatureCompatibility;
 use Infixs\SquidCore\Integrations\WooCommerce\Products\CorreiosNcmCopy;
 use Infixs\SquidCore\Integrations\WooCommerce\Products\FiscalImport\FiscalDataSource;
@@ -150,13 +155,18 @@ class AppServiceProvider extends ServiceProvider {
 
 		$this->registerProductNcm();
 
+		$this->app->singleton( CorreiosTrackingCodes::class, function ( $app ) {
+			return new CorreiosTrackingCodes( $app->make( CorreiosAutomatico::class ) );
+		} );
+
 		$this->app->singleton( SyncDispatcher::class, function ( $app ) {
 			return new SyncDispatcher(
 				$app->make( SquidCoreClient::class ),
 				$app->make( SyncStatusRepository::class ),
 				$app->make( ActivityRepository::class ),
 				$app->make( BackgroundQueue::class ),
-				$app->make( ProductNcmResolver::class )
+				$app->make( ProductNcmResolver::class ),
+				$app->make( CorreiosTrackingCodes::class )
 			);
 		} );
 
@@ -429,8 +439,12 @@ class AppServiceProvider extends ServiceProvider {
 			return new InvoiceEligibility();
 		} );
 
+		$this->app->singleton( SefazRejectionAdvice::class, function ( $app ) {
+			return new SefazRejectionAdvice( $app->make( SquidCoreUrls::class ) );
+		} );
+
 		$this->app->singleton( InvoicePresenter::class, function ( $app ) {
-			return new InvoicePresenter( $app->make( InvoiceRepository::class ) );
+			return new InvoicePresenter( $app->make( InvoiceRepository::class ), $app->make( SefazRejectionAdvice::class ) );
 		} );
 
 		$this->app->singleton( InvoiceApi::class, function ( $app ) {
@@ -448,7 +462,8 @@ class AppServiceProvider extends ServiceProvider {
 				$app->make( BackgroundQueue::class ),
 				$app->make( InvoiceProductSync::class ),
 				$app->make( ActivityRepository::class ),
-				$app->make( OptionLock::class )
+				$app->make( OptionLock::class ),
+				$app->make( SquidCoreUrls::class )
 			);
 		} );
 
@@ -477,6 +492,7 @@ class AppServiceProvider extends ServiceProvider {
 		} );
 
 		$this->registerDanfe();
+		$this->registerPlanLimit();
 
 		$this->app->singleton( CorreiosInvoiceBridge::class, function ( $app ) {
 			return new CorreiosInvoiceBridge(
@@ -496,6 +512,34 @@ class AppServiceProvider extends ServiceProvider {
 		} );
 
 		$this->registerInvoiceScreens();
+	}
+
+	/**
+	 * The invoice limit of the SquidCore plan: the re-emission of the invoices it refused and the use of the month.
+	 */
+	private function registerPlanLimit(): void {
+		$this->app->singleton( PlanLimitRetry::class, function ( $app ) {
+			return new PlanLimitRetry(
+				$app->make( InvoiceRepository::class ),
+				$app->make( InvoiceService::class ),
+				$app->make( InvoiceEligibility::class ),
+				$app->make( ConnectionService::class ),
+				$app->make( BackgroundQueue::class )
+			);
+		} );
+
+		$this->app->singleton( InvoiceUsage::class, function ( $app ) {
+			return new InvoiceUsage( $app->make( InvoiceApi::class ), $app->make( ConnectionService::class ), $app->make( BackgroundQueue::class ) );
+		} );
+
+		$this->app->singleton( PlanLimitStatus::class, function ( $app ) {
+			return new PlanLimitStatus(
+				$app->make( InvoiceRepository::class ),
+				$app->make( PlanLimitRetry::class ),
+				$app->make( InvoiceUsage::class ),
+				$app->make( SquidCoreUrls::class )
+			);
+		} );
 	}
 
 	/**
@@ -576,7 +620,7 @@ class AppServiceProvider extends ServiceProvider {
 		} );
 
 		$this->app->singleton( InvoiceAttentionNotice::class, function ( $app ) {
-			return new InvoiceAttentionNotice( $app->make( InvoiceRepository::class ) );
+			return new InvoiceAttentionNotice( $app->make( InvoiceRepository::class ), $app->make( PlanLimitRetry::class ), $app->make( SquidCoreUrls::class ) );
 		} );
 	}
 
@@ -625,6 +669,10 @@ class AppServiceProvider extends ServiceProvider {
 		 */
 		$danfe_jobs = $this->app->make( DanfeSnapshotJobs::class );
 		$danfe_jobs->registerHandlers();
+
+		// And for the re-emission of the invoices the plan limit refused and the read of the use of the month.
+		$this->app->make( PlanLimitRetry::class )->registerHandlers();
+		$this->app->make( InvoiceUsage::class )->register();
 
 		/** @var WooCommerceIntegration $integration */
 		$integration = $this->app->make( WooCommerceIntegration::class );

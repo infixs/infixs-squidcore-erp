@@ -3,11 +3,13 @@ import WarningNotice from "@/components/shared/WarningNotice.vue";
 import { useInvoiceActions } from "@/composables/useInvoiceActions";
 import { useInvoiceLabels } from "@/composables/useInvoiceLabels";
 import { useI18n } from "@/composables/useI18n";
+import { isNumberingAdvice } from "@/lib/invoices";
 import { useInvoiceStore } from "@/stores/useInvoiceStore";
 import type { OrderInvoice } from "@/types/api";
 import { AlertTriangle, Ban, CheckCircle2, ExternalLink, RefreshCw, RotateCcw } from "lucide-vue-next";
 import BlockingReasons from "./BlockingReasons.vue";
 import InvoiceStatusBadge from "./InvoiceStatusBadge.vue";
+import SefazAdviceHint from "./SefazAdviceHint.vue";
 
 const emit = defineEmits<{
   (e: "cancel", invoice: OrderInvoice): void;
@@ -22,6 +24,15 @@ const { emitInvoice, refreshInvoice, fillNcm } = useInvoiceActions();
 
 function retry(item: OrderInvoice) {
   emitInvoice(item.orderId, item.state, () => emit("changed"));
+}
+
+/** SEFAZ may have authorized the very invoice it says it already received: refreshing comes before issuing again. */
+function refreshFirst(item: OrderInvoice): boolean {
+  return item.advice?.kind === "already_received";
+}
+
+function canRefresh(item: OrderInvoice): boolean {
+  return item.canRefresh && (!item.canEmit || refreshFirst(item));
 }
 
 async function refresh(item: OrderInvoice) {
@@ -77,6 +88,9 @@ function reload() {
           <p v-if="item.attentionMessage" class="isce:text-yellow-800">{{ item.attentionMessage }}</p>
           <p v-if="item.message && item.state !== 'authorized'" class="isce:break-words">{{ item.message }}</p>
 
+          <!-- The numbering notice on top of the screen explains the cause and the steps once. -->
+          <SefazAdviceHint v-if="item.advice" :advice="item.advice" :detailed="!isNumberingAdvice(item.advice)" />
+
           <BlockingReasons
             :reasons="item.reasons"
             :filling="invoiceStore.isBusy(item.orderId)"
@@ -85,13 +99,20 @@ function reload() {
         </div>
 
         <div class="isce:flex isce:flex-wrap isce:gap-2 isce:lg:justify-end">
-          <Button v-if="item.canEmit" size="sm" :disabled="invoiceStore.isBusy(item.orderId)" @click="retry(item)">
+          <Button
+            v-if="item.canEmit"
+            :variant="refreshFirst(item) ? 'outline' : 'default'"
+            size="sm"
+            :disabled="invoiceStore.isBusy(item.orderId)"
+            @click="retry(item)"
+          >
             <RotateCcw />
             {{ emitLabel(item.state) }}
           </Button>
           <Button
-            v-if="item.canRefresh && !item.canEmit"
-            variant="outline"
+            v-if="canRefresh(item)"
+            :variant="refreshFirst(item) ? 'default' : 'outline'"
+            :class="{ 'isce:order-first': refreshFirst(item) }"
             size="sm"
             :disabled="invoiceStore.isBusy(item.orderId)"
             @click="refresh(item)"

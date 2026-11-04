@@ -17,8 +17,14 @@ class InvoicePresenter {
 	 */
 	protected $repository;
 
-	public function __construct( InvoiceRepository $repository ) {
+	/**
+	 * @var SefazRejectionAdvice
+	 */
+	protected $advice;
+
+	public function __construct( InvoiceRepository $repository, SefazRejectionAdvice $advice ) {
 		$this->repository = $repository;
+		$this->advice = $advice;
 	}
 
 	/**
@@ -38,6 +44,7 @@ class InvoicePresenter {
 			'state' => $record->state() !== '' ? $record->state() : 'none',
 			'stateLabel' => InvoiceLabels::state( $record->state() ),
 			'message' => $record->message(),
+			'advice' => $this->advice->forRecord( $record ),
 			'reasons' => array_map( [ $this, 'presentReason' ], $record->reasons() ),
 			'aiNcmAvailable' => $record->aiNcmAvailable(),
 			'stalled' => $record->isStalled(),
@@ -84,7 +91,7 @@ class InvoicePresenter {
 	/**
 	 * Invoice of the SquidCore list (InvoiceView with wcOrderId, orderNumber and recipientName), with the links of
 	 * the store. The list keeps every invoice of an order; only the one the order holds now can be refreshed or
-	 * issued again, since those actions act on the order.
+	 * issued again, since those actions act on the order, and only that one gets the advice on its rejection.
 	 *
 	 * @param array $row
 	 *
@@ -111,6 +118,8 @@ class InvoicePresenter {
 			'cancelledAt' => $row['cancelledAt'] ?? null,
 			'cancellableUntil' => $row['cancellableUntil'] ?? null,
 			'sefazMessage' => (string) ( $row['mensagemSefaz'] ?? '' ),
+			// An older invoice of the order was already replaced: nothing left to fix there, only its SEFAZ message.
+			'advice' => $current ? $this->advice->forRemote( $row ) : null,
 			'environment' => (string) ( $row['environment'] ?? '' ),
 			'wcOrderId' => $order_id,
 			'orderNumber' => (string) ( $row['orderNumber'] ?? $order_id ),

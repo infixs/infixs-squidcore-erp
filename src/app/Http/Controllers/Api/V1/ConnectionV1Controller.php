@@ -31,6 +31,17 @@ class ConnectionV1Controller extends Controller {
 		];
 	}
 
+	/**
+	 * Called by the panel while it stays open. The answer is what the store knows now.
+	 */
+	public function verify() {
+		$this->connection()->verify();
+
+		return [
+			'data' => $this->connection()->status(),
+		];
+	}
+
 	public function disconnect() {
 		$warning = $this->connection()->disconnect();
 

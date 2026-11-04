@@ -4,7 +4,7 @@ Tags: erp, nfe, nota fiscal, invoice, brazil
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.4.1
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,7 @@ A SquidCore account is required. The plugin itself is free; the features availab
 * **Import from WebmaniaBR**: bring the NCM codes you already saved in the Nota Fiscal Eletrônica WooCommerce plugin (WebmaniaBR), with a preview before anything is saved and an undo
 * **One invoice per order**: orders that already have an NF-e issued by WebmaniaBR do not get a second one automatically
 * **Attention notices**: invoices that need your action are flagged in the admin
+* **Plan limit at a glance**: the dashboard and the Invoices screen show the invoices of the month against your SquidCore plan; when the limit is reached, one notice tells how many orders are waiting, links to the plans and, after you change plan, issues them all again in the background
 * **Correios Automático integration**: the NF-e issued by SquidCore is handed to the Correios Automático plugin, so the Correios pre-posting goes out with the NF-e instead of a content declaration
 * **Simplified DANFE on the labels**: with Correios Automático 1.12 or later, the simplified DANFE (DANFE Simplificado - Etiqueta) of the NF-e prints with the shipping labels; the orders list gets a link and a bulk action to print it, and the order screen a button
 * **Background processing**: sync and invoice jobs run in the background with automatic retries, so checkout is never slowed down
@@ -65,6 +66,7 @@ The plugin is a connector for the SquidCore ERP platform, provided by Infixs. It
 * **When orders are created, change status or are paid**: the order data is sent, including the customer's name, company, email, phone, billing and shipping addresses, Brazilian fields (CPF, CNPJ, IE, RG, number, neighborhood, cell phone), order items, totals, shipping, fees, coupons, payment method and customer note, along with your site URL.
 * **When an NF-e is issued, checked, cancelled or downloaded**: the order identifier and the requested action are sent, and the invoice status, DANFE (PDF) and XML files are received.
 * **When you check the NF-e numbering of a store that used WebmaniaBR**: the Import data tab and the NF-e settings read from SquidCore the NF-e series with their next and last numbers (https://api.squidcore.com/v1/tax-invoice/nfe/numeracoes and https://api.squidcore.com/v1/tax-invoice/nfe/numeracoes/emitidos) and the tax defaults of your company, such as the CFOP and the operation nature (https://api.squidcore.com/v1/tax-invoice/fiscal-settings), so you can continue the numbering where WebmaniaBR stopped. Only the access token goes with these reads: nothing about the WebmaniaBR invoices is sent. The answer is cached for 10 minutes.
+* **To show the invoices of the month against your plan**: the dashboard and the Invoices screen read from SquidCore how many NF-e and NFC-e your organization issued this month and the invoice limit of its plan (https://api.squidcore.com/v1/integrations/apps/woocommerce/nfe/usage). The read runs in the background, at most every 10 minutes while the SquidCore pages of the WordPress admin are open and shortly after an invoice is authorized, and right away when you click Refresh. Only the access token goes with it. The answer is cached for up to a day.
 * **When an NF-e is authorized and Correios Automático 1.12 or later is active**: the authorized XML of the invoice is downloaded once from https://api.squidcore.com/v1/integrations/apps/woocommerce/orders/{order id}/nfe/xml, and only what the simplified DANFE prints is kept in the order: the access key, the authorization protocol and date, the number, series and issue date, the names, CPF or CNPJ, state registrations and states of the issuer and the recipient, and the total (no address, email or phone). When Correios Automático starts printing the simplified DANFE, the invoices authorized in the last 45 days on orders still to ship are read the same way, once, in the background; a label printed before an invoice was read downloads its XML then. Only the order identifier and the access token go with these downloads. The data is removed when the invoice is cancelled and when the plugin is deleted.
 * **When you ask the AI to fill missing NCM codes**: the order identifier and the IDs of the products to classify are sent. SquidCore classifies those products with the AI provider your organization connected in SquidCore (for example OpenAI or Anthropic), under the SquidCore Privacy Policy.
 
@@ -157,7 +159,13 @@ No. Sync and invoice requests run in the background, with automatic retries when
 
 == Changelog ==
 
-= 1.4.1 - 2026-10-24 =
+= 1.5.0 - 2026-11-04 =
+* Invoices: notice when the monthly invoice limit of the SquidCore plan is reached, with the plans link
+* Invoices: "Issue the pending invoices" sends again, one by one, the invoices the plan limit held
+* Invoices: invoices used this month against the plan limit, with a warning from 80%
+* Invoices: what to check and what to do when SEFAZ refuses an invoice for its number (duplicate, voided or already used)
+* Connection: the panel shows at once a connection that SquidCore no longer accepts
+* Orders: Correios Automático tracking codes sent with the order
 * Translations: delivered by WordPress.org language packs
 
 = 1.4.0 - 2026-10-21 =

@@ -60,6 +60,20 @@ class SquidCoreUrls {
 	}
 
 	/**
+	 * NF-e numbering screen of the panel, where the next number and the default of each series are set.
+	 */
+	public function nfeNumberingUrl(): string {
+		return $this->appUrl . '/settings/nfe-numeracao';
+	}
+
+	/**
+	 * "Plano e cobrança" of the panel with the plans open to compare (`?plans=1`, the "Ver planos" of the panel).
+	 */
+	public function plansUrl(): string {
+		return $this->appUrl . '/settings/billing?plans=1';
+	}
+
+	/**
 	 * Whether the API URL can receive the token. Safe to call before `init`: it translates nothing.
 	 */
 	public function isApiUrlUsable(): bool {

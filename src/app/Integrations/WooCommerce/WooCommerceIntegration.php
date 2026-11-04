@@ -3,6 +3,7 @@
 namespace Infixs\SquidCore\Integrations\WooCommerce;
 
 use Infixs\SquidCore\AvelPress\Config\SettingsRepository;
+use Infixs\SquidCore\Integrations\CorreiosAutomatico\CorreiosTrackingCodes;
 use Infixs\SquidCore\Integrations\WooCommerce\Products\CorreiosNcmCopy;
 use Infixs\SquidCore\Services\ConnectionService;
 
@@ -88,6 +89,10 @@ class WooCommerceIntegration {
 		add_action( 'woocommerce_new_order', [ $this, 'onOrderCreated' ] );
 		add_action( 'woocommerce_order_status_changed', [ $this, 'onOrderChanged' ] );
 		add_action( 'woocommerce_payment_complete', [ $this, 'onOrderChanged' ] );
+
+		// A tracking code added by Correios Automático changes no WooCommerce field: the order goes again so SquidCore
+		// gets the code (and the customer the notice).
+		add_action( CorreiosTrackingCodes::ADDED_ACTION, [ $this, 'onTrackingCodeAdded' ], 10, 2 );
 	}
 
 	/**
@@ -204,6 +209,21 @@ class WooCommerceIntegration {
 	 */
 	public function onOrderChanged( $order_id ): void {
 		$this->dispatcher->dispatch( 'order.updated', (int) $order_id );
+	}
+
+	/**
+	 * Correios Automático added a tracking code to an order. The codes of the volumes of one order arrive in a row
+	 * and collapse into one push.
+	 *
+	 * @param string $code
+	 * @param int $order_id
+	 */
+	public function onTrackingCodeAdded( $code, $order_id ): void {
+		if ( ! absint( $order_id ) ) {
+			return;
+		}
+
+		$this->dispatcher->dispatch( 'order.updated', absint( $order_id ) );
 	}
 
 	/**

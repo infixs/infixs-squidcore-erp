@@ -25,6 +25,11 @@ class InvoiceEligibility {
 	private const UNPAID_STATUSES = [ 'pending', 'failed', 'cancelled', 'refunded', 'checkout-draft', 'trash' ];
 
 	/**
+	 * Statuses of an order that is no longer a sale, paid or not.
+	 */
+	private const ENDED_STATUSES = [ 'failed', 'cancelled', 'refunded', 'trash' ];
+
+	/**
 	 * Why the order does not get an invoice automatically. Asked when the emission is queued.
 	 *
 	 * @param string $trigger What asks for the emission (e.g. "payment").
@@ -97,6 +102,14 @@ class InvoiceEligibility {
 	 */
 	public function isStillPaid( \WC_Order $order ): bool {
 		return $order->get_date_paid() !== null && ! in_array( $order->get_status(), self::UNPAID_STATUSES, true );
+	}
+
+	/**
+	 * Whether the sale of the order ended: cancelled, refunded, failed or trashed. Unlike isStillPaid(), an order
+	 * that was never paid still counts as a sale, since the store owner may issue its invoice by hand.
+	 */
+	public function isSaleEnded( \WC_Order $order ): bool {
+		return in_array( $order->get_status(), self::ENDED_STATUSES, true );
 	}
 
 	private function billingCountry( \WC_Order $order ): string {

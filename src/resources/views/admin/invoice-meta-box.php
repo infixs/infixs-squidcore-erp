@@ -6,11 +6,13 @@
  * @package Infixs\SquidCore
  * @since   1.0.0
  *
- * @var array  $invoice         InvoicePresenter::present().
+ * @var array  $invoice         InvoicePresenter::present(); `advice` (SefazRejectionAdvice::build()) explains a rejection
+ *                              the store owner can fix.
  * @var array  $notice          Optional {type, message} shown on top.
  * @var bool   $is_new_order    The order was not saved yet.
  * @var string $emit_label      Label of the emission button.
  * @var string $emit_confirm    Confirmation asked before the emission, blank for none.
+ * @var bool   $refresh_first   "Refresh" is the main action instead of the emission (SEFAZ already received the invoice).
  * @var string $scheduled_text  Date of the scheduled emission.
  * @var string $deadline_text   Last moment to cancel the invoice.
  * @var string $authorized_text Date of the authorization.
@@ -19,6 +21,8 @@
  * @var bool   $ai_fillable     The missing NCM can be filled by the AI of SquidCore.
  * @var bool   $ncm_hint        Show how to enable filling the NCM with AI.
  * @var string $ai_connect_url  Integrations page of the SquidCore panel, where an AI is connected; blank without the hint.
+ * @var string $plans_url       Plans of the SquidCore panel, when the invoice limit of the plan refused the invoice.
+ * @var array  $plans_texts     {hint, label} of the plans link.
  * @var int    $min_length      Minimum length of the cancellation reason.
  * @var int    $max_length      Maximum length of the cancellation reason.
  * @var string $danfe_print_url   Simplified DANFE print of Correios Automático; blank when not offered.
@@ -29,6 +33,7 @@ defined( 'ABSPATH' ) || exit;
 
 $infixs_squidcore_state = $invoice['state'];
 $infixs_squidcore_details = $invoice['invoice'];
+$infixs_squidcore_advice = $invoice['advice'];
 ?>
 <?php if ( ! empty( $notice['message'] ) ) : ?>
 	<div class="notice notice-<?php echo esc_attr( $notice['type'] ?? 'info' ); ?> inline isq-invoice__notice">
@@ -107,6 +112,32 @@ $infixs_squidcore_details = $invoice['invoice'];
 	<p class="isq-invoice__message"><?php echo esc_html( $invoice['message'] ); ?></p>
 <?php endif; ?>
 
+<?php if ( $plans_url !== '' ) : ?>
+	<div class="isq-invoice__plan-limit" data-isq-plan-limit>
+		<p class="isq-invoice__hint"><?php echo esc_html( $plans_texts['hint'] ); ?></p>
+		<p class="isq-invoice__text">
+			<a class="button" href="<?php echo esc_url( $plans_url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $plans_texts['label'] ); ?></a>
+		</p>
+	</div>
+<?php endif; ?>
+
+<?php if ( $infixs_squidcore_advice ) : ?>
+	<div class="isq-invoice__advice" data-isq-advice="<?php echo esc_attr( $infixs_squidcore_advice['kind'] ); ?>">
+		<p class="isq-invoice__advice-title"><?php echo esc_html( $infixs_squidcore_advice['title'] ); ?></p>
+		<p><?php echo esc_html( $infixs_squidcore_advice['cause'] ); ?></p>
+		<ol class="isq-invoice__advice-steps">
+			<?php foreach ( $infixs_squidcore_advice['steps'] as $infixs_squidcore_step ) : ?>
+				<li><?php echo esc_html( $infixs_squidcore_step ); ?></li>
+			<?php endforeach; ?>
+		</ol>
+		<?php if ( $infixs_squidcore_advice['actionUrl'] !== '' ) : ?>
+			<p>
+				<a class="button" href="<?php echo esc_url( $infixs_squidcore_advice['actionUrl'] ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $infixs_squidcore_advice['actionLabel'] ); ?></a>
+			</p>
+		<?php endif; ?>
+	</div>
+<?php endif; ?>
+
 <?php if ( $reasons ) : ?>
 	<ul class="isq-invoice__reasons">
 		<?php foreach ( $reasons as $infixs_squidcore_reason ) : ?>
@@ -136,7 +167,7 @@ $infixs_squidcore_details = $invoice['invoice'];
 
 <div class="isq-invoice__actions">
 	<?php if ( $invoice['canEmit'] ) : ?>
-		<button type="button" class="button button-primary" data-isq-action="emit"<?php echo $emit_confirm !== '' ? ' data-confirm="' . esc_attr( $emit_confirm ) . '"' : ''; ?>><?php echo esc_html( $emit_label ); ?></button>
+		<button type="button" class="button<?php echo $refresh_first ? '' : ' button-primary'; ?>" data-isq-action="emit"<?php echo $emit_confirm !== '' ? ' data-confirm="' . esc_attr( $emit_confirm ) . '"' : ''; ?>><?php echo esc_html( $emit_label ); ?></button>
 	<?php endif; ?>
 	<?php if ( $ai_fillable ) : ?>
 		<button type="button" class="button" data-isq-action="fill-ncm"><?php esc_html_e( 'Fill NCM with AI', 'infixs-squidcore-erp' ); ?></button>
@@ -152,7 +183,7 @@ $infixs_squidcore_details = $invoice['invoice'];
 		<a class="button" href="<?php echo esc_url( $danfe_print_url ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Simplified DANFE', 'infixs-squidcore-erp' ); ?></a>
 	<?php endif; ?>
 	<?php if ( $invoice['canRefresh'] ) : ?>
-		<button type="button" class="button" data-isq-action="refresh"><?php esc_html_e( 'Refresh', 'infixs-squidcore-erp' ); ?></button>
+		<button type="button" class="button<?php echo $refresh_first ? ' button-primary' : ''; ?>" data-isq-action="refresh"><?php esc_html_e( 'Refresh', 'infixs-squidcore-erp' ); ?></button>
 	<?php endif; ?>
 	<?php if ( $invoice['canCancel'] ) : ?>
 		<button type="button" class="button button-link-delete isq-invoice__cancel-open" data-isq-action="cancel-open" aria-expanded="false"><?php esc_html_e( 'Cancel invoice', 'infixs-squidcore-erp' ); ?></button>

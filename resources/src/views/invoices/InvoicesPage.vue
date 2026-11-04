@@ -2,8 +2,11 @@
 import { createColumnHelper, createDataTableManager, type DataTableV2Translations } from "@/components/infixs/data-table/data-table";
 import TableManager from "@/components/infixs/data-table/TableManager.vue";
 import SearchInput from "@/components/infixs/search-input/SearchInput.vue";
+import InvoiceUsageMeter from "@/components/plan-limit/InvoiceUsageMeter.vue";
+import PlanLimitBanner from "@/components/plan-limit/PlanLimitBanner.vue";
 import WarningNotice from "@/components/shared/WarningNotice.vue";
 import { useI18n } from "@/composables/useI18n";
+import { usePlanLimit } from "@/composables/usePlanLimit";
 import { resolveErrorMessage } from "@/lib/errors";
 import { stateOfStatus } from "@/lib/invoices";
 import { formatDateTime, formatMoney } from "@/lib/utils";
@@ -20,7 +23,9 @@ import { toast } from "vue-sonner";
 import InvoiceCancelDialog, { type InvoiceCancelTarget } from "./InvoiceCancelDialog.vue";
 import InvoiceRowActions from "./InvoiceRowActions.vue";
 import InvoiceStatusBadge from "./InvoiceStatusBadge.vue";
+import NumberingAdviceBanner from "./NumberingAdviceBanner.vue";
 import PendingInvoicesCard from "./PendingInvoicesCard.vue";
+import SefazAdviceHint from "./SefazAdviceHint.vue";
 
 const ALL_STATUSES = "all";
 
@@ -29,6 +34,7 @@ const appStore = useAppStore();
 const statusStore = useStatusStore();
 const invoiceStore = useInvoiceStore();
 const { connection } = storeToRefs(statusStore);
+const { usage, usagePlansUrl } = usePlanLimit();
 const route = useRoute();
 const router = useRouter();
 
@@ -106,6 +112,7 @@ const columns = [
         row.original.sefazMessage && (row.original.status === "ERROR" || row.original.status === "DENIED")
           ? h("p", { class: "isce:max-w-64 isce:whitespace-normal isce:text-xs isce:text-muted-foreground" }, row.original.sefazMessage)
           : null,
+        row.original.advice ? h(SefazAdviceHint, { advice: row.original.advice, class: "isce:max-w-64 isce:whitespace-normal" }) : null,
       ]),
   }),
   field("issuedAt", t("invoices.columns.authorized_at", "Authorized on"), { skeleton: { width: 110 } }, ({ row }) =>
@@ -176,6 +183,12 @@ function reloadAll() {
   if (isConnected.value) table.list();
 }
 
+/** "Refresh" also reads the use of the month from SquidCore again. */
+function refreshAll() {
+  reloadAll();
+  if (isConnected.value) statusStore.refreshInvoiceUsage().catch(() => {});
+}
+
 onMounted(async () => {
   loadPending();
 
@@ -209,8 +222,12 @@ onMounted(async () => {
           <Settings />
           {{ t("invoices.settings", "Invoice settings") }}
         </Button>
-        <Button variant="outline" :disabled="table.props.loading || invoiceStore.isLoadingPending" @click="reloadAll">
-          <Loader2 v-if="table.props.loading || invoiceStore.isLoadingPending" class="isce:animate-spin" />
+        <Button
+          variant="outline"
+          :disabled="table.props.loading || invoiceStore.isLoadingPending || statusStore.isRefreshingUsage"
+          @click="refreshAll"
+        >
+          <Loader2 v-if="table.props.loading || invoiceStore.isLoadingPending || statusStore.isRefreshingUsage" class="isce:animate-spin" />
           <RefreshCw v-else />
           {{ t("global.refresh", "Refresh") }}
         </Button>
@@ -229,6 +246,21 @@ onMounted(async () => {
         </Button>
       </template>
     </WarningNotice>
+
+    <PlanLimitBanner v-if="appStore.hasWooCommerce" class="isce:mt-5" @finished="reloadAll" />
+
+    <NumberingAdviceBanner
+      v-if="appStore.hasWooCommerce"
+      class="isce:mt-5"
+      :invoices="invoiceStore.pending"
+    />
+
+    <InvoiceUsageMeter
+      v-if="appStore.hasWooCommerce && isConnected && usage"
+      class="isce:mt-5 isce:rounded-md isce:border isce:border-input isce:p-4 isce:shadow-xs"
+      :usage="usage"
+      :plans-url="usagePlansUrl"
+    />
 
     <PendingInvoicesCard
       v-if="appStore.hasWooCommerce"

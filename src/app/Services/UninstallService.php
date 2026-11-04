@@ -8,6 +8,8 @@ use Infixs\SquidCore\Integrations\WooCommerce\Invoices\Danfe\DanfeBackfill;
 use Infixs\SquidCore\Integrations\WooCommerce\Invoices\Danfe\DanfeSnapshotJobs;
 use Infixs\SquidCore\Integrations\WooCommerce\Invoices\Danfe\DanfeSnapshotRepository;
 use Infixs\SquidCore\Integrations\WooCommerce\Invoices\InvoiceJobs;
+use Infixs\SquidCore\Integrations\WooCommerce\Invoices\PlanLimit\InvoiceUsage;
+use Infixs\SquidCore\Integrations\WooCommerce\Invoices\PlanLimit\PlanLimitRetry;
 use Infixs\SquidCore\Integrations\WebmaniaBR\WebmaniaBR;
 use Infixs\SquidCore\Integrations\WebmaniaBR\WebmaniaNumberingCheck;
 use Infixs\SquidCore\Integrations\WooCommerce\Products\CorreiosNcmCopy;
@@ -61,6 +63,8 @@ class UninstallService {
 		InvoiceJobs::POLL_HOOK,
 		DanfeSnapshotJobs::BUILD_HOOK,
 		DanfeSnapshotJobs::BACKFILL_HOOK,
+		PlanLimitRetry::HOOK,
+		InvoiceUsage::HOOK,
 		CorreiosNcmCopy::HOOK,
 		NcmCoverage::HOOK,
 		FiscalImportJobs::BATCH_HOOK,
@@ -69,7 +73,8 @@ class UninstallService {
 	];
 
 	/**
-	 * Options of the NCM copy, the NCM count and the fiscal import (state, lists, pending push, lock, activation mark).
+	 * Options of the NCM copy, the NCM count, the fiscal import (state, lists, pending push, lock, activation mark), the
+	 * DANFE backfill and the re-emission of the invoices the plan limit refused.
 	 */
 	private const FEATURE_OPTIONS = [
 		CorreiosNcmCopy::OPTION,
@@ -81,16 +86,21 @@ class UninstallService {
 		FiscalImportRunRepository::LOCK,
 		FiscalImportAutoOpen::OPTION,
 		DanfeBackfill::OPTION,
+		PlanLimitRetry::OPTION,
 	];
 
 	/**
-	 * Cached results of the fiscal import: WebmaniaBR probe, scan, watchdog throttle and numbering check.
+	 * Cached results of the fiscal import (WebmaniaBR probe, scan, watchdog throttle and numbering check), the use of
+	 * the month of the plan and the count of invoices the plan limit refused.
 	 */
 	private const FEATURE_TRANSIENTS = [
 		WebmaniaBR::PROBE_TRANSIENT,
 		FiscalImportRunRepository::SCAN_TRANSIENT,
 		FiscalImportWatchdog::TRANSIENT,
 		WebmaniaNumberingCheck::TRANSIENT,
+		InvoiceUsage::TRANSIENT,
+		InvoiceAttentionNotice::PLAN_LIMIT_TRANSIENT,
+		ConnectionService::VERIFY_TRANSIENT,
 	];
 
 	/**

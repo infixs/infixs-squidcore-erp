@@ -10,7 +10,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Keeps the invoice record in order metas, through the WooCommerce CRUD (works with and without HPOS).
  *
- * The state and the attention live in metas of their own so orders can be counted and listed by them.
+ * The state, the attention and why a failed emission failed live in metas of their own so orders can be counted and
+ * listed by them.
  *
  * @package Infixs\SquidCore
  * @since   1.0.0
@@ -22,6 +23,11 @@ class InvoiceRepository {
 	public const META_STATE = '_infixs_squidcore_invoice_state';
 
 	public const META_ATTENTION = '_infixs_squidcore_invoice_attention';
+
+	/**
+	 * Why the emission failed (InvoiceRecord::failureCode()), only while it is failed for that reason.
+	 */
+	public const META_FAILURE = '_infixs_squidcore_invoice_failure';
 
 	/**
 	 * Query var carrying a meta query to the posts storage, which ignores `meta_query` in wc_get_orders().
@@ -95,16 +101,13 @@ class InvoiceRepository {
 		$data = $record->toArray();
 		$previous_state = (string) $order->get_meta( self::META_STATE, true );
 		$changed = $previous_state !== $record->state()
-			|| (string) $order->get_meta( self::META_ATTENTION, true ) !== $record->attention();
+			|| (string) $order->get_meta( self::META_ATTENTION, true ) !== $record->attention()
+			|| (string) $order->get_meta( self::META_FAILURE, true ) !== $record->failureCode();
 
 		$order->update_meta_data( self::META_RECORD, $data );
 		$order->update_meta_data( self::META_STATE, $record->state() );
-
-		if ( $record->attention() !== '' ) {
-			$order->update_meta_data( self::META_ATTENTION, $record->attention() );
-		} else {
-			$order->delete_meta_data( self::META_ATTENTION );
-		}
+		$this->saveOptionalMeta( $order, self::META_ATTENTION, $record->attention() );
+		$this->saveOptionalMeta( $order, self::META_FAILURE, $record->failureCode() );
 
 		$order->save_meta_data();
 
@@ -117,7 +120,7 @@ class InvoiceRepository {
 		}
 
 		/**
-		 * Fires when the state or the attention of an order invoice changes in the store.
+		 * Fires when the state, the attention or the failure reason of an order invoice changes in the store.
 		 *
 		 * @since 1.0.0
 		 *
@@ -126,6 +129,18 @@ class InvoiceRepository {
 		 * @param string $attention Attention reason, blank when none.
 		 */
 		do_action( 'infixs_squidcore_invoice_state_changed', $order->get_id(), $record->state(), $record->attention() );
+	}
+
+	/**
+	 * A meta that exists only while it has a value, so the orders with it are found by the meta key.
+	 */
+	private function saveOptionalMeta( \WC_Order $order, string $key, string $value ): void {
+		if ( $value !== '' ) {
+			$order->update_meta_data( $key, $value );
+			return;
+		}
+
+		$order->delete_meta_data( $key );
 	}
 
 	/**
@@ -167,6 +182,29 @@ class InvoiceRepository {
 	 */
 	public function countPending( array $states ): int {
 		return $this->count( $this->pendingClause( $states ) );
+	}
+
+	/**
+	 * Number of orders whose emission failed for a reason (InvoiceRecord::FAILURE_PLAN_LIMIT).
+	 */
+	public function countByFailure( string $failureCode ): int {
+		return $this->count( $this->failureClause( $failureCode ) );
+	}
+
+	/**
+	 * Ids of every order whose emission failed for a reason, oldest first.
+	 *
+	 * @return int[]
+	 */
+	public function findIdsByFailure( string $failureCode ): array {
+		$ids = $this->query( $this->failureClause( $failureCode ), [
+			'limit' => -1,
+			'orderby' => 'date',
+			'order' => 'ASC',
+			'return' => 'ids',
+		] );
+
+		return array_values( array_filter( array_map( 'intval', (array) $ids ) ) );
 	}
 
 	/**
@@ -245,6 +283,13 @@ class InvoiceRepository {
 				'compare' => 'IN',
 			],
 			$this->attentionClause(),
+		];
+	}
+
+	private function failureClause( string $failureCode ): array {
+		return [
+			'key' => self::META_FAILURE,
+			'value' => $failureCode,
 		];
 	}
 

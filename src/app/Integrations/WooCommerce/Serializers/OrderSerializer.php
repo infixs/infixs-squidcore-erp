@@ -2,6 +2,7 @@
 
 namespace Infixs\SquidCore\Integrations\WooCommerce\Serializers;
 
+use Infixs\SquidCore\Integrations\CorreiosAutomatico\CorreiosTrackingCodes;
 use Infixs\SquidCore\Integrations\WooCommerce\Products\ProductNcmResolver;
 
 defined( 'ABSPATH' ) || exit;
@@ -27,8 +28,18 @@ class OrderSerializer {
 	 */
 	protected $ncmResolver;
 
-	public function __construct( ProductNcmResolver $ncmResolver ) {
+	/**
+	 * @var CorreiosTrackingCodes|null
+	 */
+	protected $trackingCodes;
+
+	/**
+	 * @param ProductNcmResolver $ncmResolver
+	 * @param CorreiosTrackingCodes|null $trackingCodes Without it the payload says nothing about tracking codes.
+	 */
+	public function __construct( ProductNcmResolver $ncmResolver, ?CorreiosTrackingCodes $trackingCodes = null ) {
 		$this->ncmResolver = $ncmResolver;
+		$this->trackingCodes = $trackingCodes;
 	}
 
 	/**
@@ -40,7 +51,7 @@ class OrderSerializer {
 		$date_created = $order->get_date_created();
 		$date_paid = $order->get_date_paid();
 
-		return [
+		$payload = [
 			'id' => $order->get_id(),
 			'number' => (string) $order->get_order_number(),
 			'status' => $order->get_status(),
@@ -85,6 +96,27 @@ class OrderSerializer {
 			'fee_lines' => $this->serializeFeeLines( $order ),
 			'coupon_lines' => $this->serializeCouponLines( $order ),
 		];
+
+		$trackingCodes = $this->serializeTrackingCodes( $order );
+
+		if ( null !== $trackingCodes ) {
+			$payload['tracking_codes'] = $trackingCodes;
+		}
+
+		return $payload;
+	}
+
+	/**
+	 * The tracking codes of Correios Automático, in the format of its REST field. Null (and no key in the payload)
+	 * when Correios Automático is not active: SquidCore then leaves the shipments of the order as they are, while an
+	 * empty list says the order has no code yet.
+	 *
+	 * @param \WC_Order $order
+	 *
+	 * @return array|null
+	 */
+	protected function serializeTrackingCodes( \WC_Order $order ): ?array {
+		return $this->trackingCodes ? $this->trackingCodes->forOrder( $order->get_id() ) : null;
 	}
 
 	/**

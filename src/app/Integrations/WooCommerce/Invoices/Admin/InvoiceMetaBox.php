@@ -9,6 +9,8 @@ use Infixs\SquidCore\Integrations\WooCommerce\Invoices\InvoiceLabels;
 use Infixs\SquidCore\Integrations\WooCommerce\Invoices\InvoicePresenter;
 use Infixs\SquidCore\Integrations\WooCommerce\Invoices\InvoiceRecord;
 use Infixs\SquidCore\Integrations\WooCommerce\Invoices\InvoiceService;
+use Infixs\SquidCore\Integrations\WooCommerce\Invoices\PlanLimit\PlanLimitLabels;
+use Infixs\SquidCore\Integrations\WooCommerce\Invoices\SefazRejection;
 use Infixs\SquidCore\Support\OrderScreen;
 use Infixs\SquidCore\Support\SquidCoreUrls;
 
@@ -172,6 +174,8 @@ class InvoiceMetaBox {
 			'notice' => $notice,
 			'is_new_order' => $order->get_status() === 'auto-draft',
 			'emit_label' => $this->emitLabel( $state ),
+			// SEFAZ may have authorized the very invoice it says it already received: refreshing comes before issuing.
+			'refresh_first' => ( $invoice['advice']['kind'] ?? '' ) === SefazRejection::ALREADY_RECEIVED,
 			'emit_confirm' => in_array( $state, [ InvoiceRecord::DENIED, InvoiceRecord::CANCELLED ], true )
 				? __( 'A new invoice will be issued for this order. Continue?', 'infixs-squidcore-erp' )
 				: '',
@@ -183,6 +187,11 @@ class InvoiceMetaBox {
 			'ai_fillable' => $ai_fillable,
 			'ncm_hint' => $ncm_hint,
 			'ai_connect_url' => $ncm_hint ? $this->urls->appUrl() . '/integrations' : '',
+			'plans_url' => $record !== null && $record->isPlanLimitFailure() ? $this->urls->plansUrl() : '',
+			'plans_texts' => [
+				'hint' => PlanLimitLabels::orderNextStep(),
+				'label' => PlanLimitLabels::seePlans(),
+			],
 			'min_length' => InvoiceService::JUSTIFICATION_MIN_LENGTH,
 			'max_length' => InvoiceService::JUSTIFICATION_MAX_LENGTH,
 			'danfe_print_url' => $danfe_eligible ? $this->correios->danfePrintUrl( [ $order->get_id() ] ) : '',

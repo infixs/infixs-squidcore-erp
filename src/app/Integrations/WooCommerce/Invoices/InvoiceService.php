@@ -3,11 +3,13 @@
 namespace Infixs\SquidCore\Integrations\WooCommerce\Invoices;
 
 use Infixs\SquidCore\Integrations\WooCommerce\ActivityRepository;
+use Infixs\SquidCore\Integrations\WooCommerce\Invoices\PlanLimit\PlanLimitLabels;
 use Infixs\SquidCore\Integrations\WooCommerce\SyncDispatcher;
 use Infixs\SquidCore\Services\ConnectionService;
 use Infixs\SquidCore\Support\ApiErrorMessage;
 use Infixs\SquidCore\Support\BackgroundQueue;
 use Infixs\SquidCore\Support\OptionLock;
+use Infixs\SquidCore\Support\SquidCoreUrls;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -105,9 +107,16 @@ class InvoiceService {
 	protected $lock;
 
 	/**
+	 * @var SquidCoreUrls
+	 */
+	protected $urls;
+
+	/**
 	 * @param ActivityRepository $activity Counters of the activity chart: the emissions that stop waiting on anyone
 	 *                                     but the store owner, and the order pushes the emission gave up on.
 	 * @param OptionLock         $lock     Per-order lock shared by every request that changes the invoice.
+	 * @param SquidCoreUrls      $urls     The plans of the panel, linked from the note of an emission the plan limit
+	 *                                     refused.
 	 */
 	public function __construct(
 		InvoiceApi $api,
@@ -119,7 +128,8 @@ class InvoiceService {
 		BackgroundQueue $queue,
 		InvoiceProductSync $productSync,
 		ActivityRepository $activity,
-		OptionLock $lock
+		OptionLock $lock,
+		SquidCoreUrls $urls
 	) {
 		$this->api = $api;
 		$this->repository = $repository;
@@ -131,6 +141,7 @@ class InvoiceService {
 		$this->productSync = $productSync;
 		$this->activity = $activity;
 		$this->lock = $lock;
+		$this->urls = $urls;
 	}
 
 	public function find( \WC_Order $order ): ?InvoiceRecord {
@@ -263,6 +274,33 @@ class InvoiceService {
 			}
 
 			return $record;
+		} finally {
+			$this->releaseLock( $order->get_id() );
+		}
+	}
+
+	/**
+	 * Puts an order back among the ones the plan limit refused after a new attempt SquidCore did not answer about
+	 * the order (it was unavailable, or refused the whole account), so the next "Issue the pending invoices" takes it
+	 * again. The record gets back the reason and the message of the plan limit; the order note of the attempt stays.
+	 * Nothing changes when the invoice moved on meanwhile.
+	 *
+	 * @param InvoiceRecord $refused The record as the plan limit left it, before the attempt.
+	 */
+	public function restorePlanLimitFailure( \WC_Order $order, InvoiceRecord $refused ): void {
+		if ( ! $refused->isPlanLimitFailure() || ! $this->acquireLock( $order->get_id() ) ) {
+			return;
+		}
+
+		try {
+			$record = $this->repository->findFresh( $order );
+
+			if ( ! $record || ! $record->is( InvoiceRecord::FAILED ) || $record->isPlanLimitFailure() ) {
+				return;
+			}
+
+			$record->setPlanLimitFailure( $refused->message(), $refused->planLimit() );
+			$this->repository->save( $order, $record );
 		} finally {
 			$this->releaseLock( $order->get_id() );
 		}
@@ -737,6 +775,17 @@ class InvoiceService {
 			return $record;
 		}
 
+		if ( $code === 'PLAN_LIMIT_REACHED' ) {
+			return $this->failForPlanLimit( $order, $record, $message, $body );
+		}
+
+		// Any other 402 refuses every invoice of the account (subscription, plan without invoices), not this one.
+		if ( ApiErrorMessage::status( $error ) === 402 ) {
+			$record->setAccountFailure( $message );
+
+			return $this->saveFailure( $order, $record, $this->failureNote( $message ) );
+		}
+
 		$transient = ApiErrorMessage::isTransient( $error );
 
 		if ( $transient && $trigger === self::TRIGGER_AUTOMATIC && $record->emitAttempts() <= count( self::RETRY_DELAYS ) ) {
@@ -791,11 +840,41 @@ class InvoiceService {
 
 	private function fail( \WC_Order $order, InvoiceRecord $record, string $message, bool $transient ): InvoiceRecord {
 		$record->setFailed( $message, $transient );
-		$this->repository->save( $order, $record );
 
+		return $this->saveFailure( $order, $record, $this->failureNote( $message ) );
+	}
+
+	/**
+	 * The invoice limit of the plan was reached: the record keeps the reason, so the store sees every order it left
+	 * without an invoice at once, and the note links to the plans.
+	 *
+	 * @param array $denial Body of the 402: metric, limit, used.
+	 */
+	private function failForPlanLimit( \WC_Order $order, InvoiceRecord $record, string $message, array $denial ): InvoiceRecord {
+		$record->setPlanLimitFailure( $message, $denial );
+		$this->saveFailure( $order, $record, $this->failureNote( $message ) . ' ' . PlanLimitLabels::plansLink( $this->urls->plansUrl() ) );
+
+		/**
+		 * Fires when SquidCore refuses the invoice of an order because the invoice limit of the plan was reached.
+		 *
+		 * @since 1.5.0
+		 *
+		 * @param int   $order_id Order id.
+		 * @param array $limit    What SquidCore told: metric, limit (null: no limit) and used.
+		 */
+		do_action( 'infixs_squidcore_invoice_plan_limit_reached', $order->get_id(), $record->planLimit() );
+
+		return $record;
+	}
+
+	private function failureNote( string $message ): string {
 		/* translators: %s: error message. */
-		$order->add_order_note( sprintf( __( 'SquidCore: the invoice was not issued. %s', 'infixs-squidcore-erp' ), $message ) );
+		return sprintf( __( 'SquidCore: the invoice was not issued. %s', 'infixs-squidcore-erp' ), $message );
+	}
 
+	private function saveFailure( \WC_Order $order, InvoiceRecord $record, string $note ): InvoiceRecord {
+		$this->repository->save( $order, $record );
+		$order->add_order_note( $note );
 		$this->fireFailed( $order, $record );
 
 		return $record;
@@ -893,16 +972,25 @@ class InvoiceService {
 				return sprintf( __( 'invoice (NF-e) number %1$s, series %2$s authorized. Access key: %3$s.', 'infixs-squidcore-erp' ), $record->number(), $record->series(), $record->key() );
 			case InvoiceRecord::ERROR:
 				/* translators: %s: message returned by SEFAZ. */
-				return sprintf( __( 'the invoice (NF-e) was rejected. %s', 'infixs-squidcore-erp' ), $record->message() );
+				return sprintf( __( 'the invoice (NF-e) was rejected. %s', 'infixs-squidcore-erp' ), $record->message() ) . $this->rejectionNoteLine( $record );
 			case InvoiceRecord::DENIED:
 				/* translators: %s: message returned by SEFAZ. */
-				return sprintf( __( 'the invoice (NF-e) was denied by SEFAZ. %s', 'infixs-squidcore-erp' ), $record->message() );
+				return sprintf( __( 'the invoice (NF-e) was denied by SEFAZ. %s', 'infixs-squidcore-erp' ), $record->message() ) . $this->rejectionNoteLine( $record );
 			case InvoiceRecord::CANCELLED:
 				/* translators: %s: invoice number. */
 				return sprintf( __( 'invoice (NF-e) number %s cancelled.', 'infixs-squidcore-erp' ), $record->number() );
 		}
 
 		return '';
+	}
+
+	/**
+	 * What to do about a rejection the store owner can fix (a number another system used...), on a line of its own.
+	 */
+	private function rejectionNoteLine( InvoiceRecord $record ): string {
+		$rejection = $record->rejection();
+
+		return $rejection ? "\n" . SefazRejectionAdvice::noteLine( $rejection ) : '';
 	}
 
 	/**
