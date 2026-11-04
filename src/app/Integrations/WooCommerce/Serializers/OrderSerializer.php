@@ -3,6 +3,7 @@
 namespace Infixs\SquidCore\Integrations\WooCommerce\Serializers;
 
 use Infixs\SquidCore\Integrations\CorreiosAutomatico\CorreiosTrackingCodes;
+use Infixs\SquidCore\Integrations\WooCommerce\CheckoutBlockFields;
 use Infixs\SquidCore\Integrations\WooCommerce\Products\ProductNcmResolver;
 
 defined( 'ABSPATH' ) || exit;
@@ -22,6 +23,12 @@ class OrderSerializer {
 	 * and Infixs Checkout Fields.
 	 */
 	private const BRAZILIAN_FIELDS = [ 'persontype', 'cpf', 'cnpj', 'ie', 'rg', 'number', 'neighborhood', 'cellphone' ];
+
+	/**
+	 * The fields of the address: the checkout block keeps them in its billing and shipping groups, the document and
+	 * contact fields in "other".
+	 */
+	private const ADDRESS_FIELDS = [ 'number', 'neighborhood' ];
 
 	/**
 	 * @var ProductNcmResolver
@@ -120,6 +127,10 @@ class OrderSerializer {
 	}
 
 	/**
+	 * The meta of the classic checkout ("_billing_cpf", "_shipping_number") comes first. An order placed in the
+	 * checkout block without it answers with the additional field the block saved, looked for only in the groups
+	 * where the field lives, so a field of another plugin with the same name in another group is never taken.
+	 *
 	 * @param \WC_Order $order
 	 * @param string $type "billing" or "shipping".
 	 *
@@ -130,10 +141,30 @@ class OrderSerializer {
 
 		foreach ( self::BRAZILIAN_FIELDS as $field ) {
 			$value = trim( (string) $order->get_meta( "_{$type}_{$field}", true ) );
+
+			if ( $value === '' ) {
+				$value = CheckoutBlockFields::get( $order, $this->blockGroups( $type, $field ), $field );
+			}
+
 			$fields[ $field ] = $value !== '' ? $value : null;
 		}
 
 		return $fields;
+	}
+
+	/**
+	 * Groups of the checkout block that may hold a field: the address fields the group of their own type, the
+	 * document and contact fields "other" (or "billing", for a plugin that registers them in the address), and none
+	 * for a document of the shipping address, which does not exist.
+	 *
+	 * @return string[]
+	 */
+	private function blockGroups( string $type, string $field ): array {
+		if ( in_array( $field, self::ADDRESS_FIELDS, true ) ) {
+			return [ $type ];
+		}
+
+		return $type === 'billing' ? [ 'other', 'billing' ] : [];
 	}
 
 	/**

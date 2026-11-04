@@ -4,7 +4,7 @@ Tags: erp, nfe, nota fiscal, invoice, brazil
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.5.0
+Stable tag: 1.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -158,6 +158,9 @@ No. Sync and invoice requests run in the background, with automatic retries when
 6. NCM field on the product
 
 == Changelog ==
+
+= 1.5.1 - 2026-11-04 =
+* Orders: CPF, CNPJ, number and neighborhood of orders placed in the block checkout reach SquidCore without saving the order again
 
 = 1.5.0 - 2026-11-04 =
 * Invoices: notice when the monthly invoice limit of the SquidCore plan is reached, with the plans link
