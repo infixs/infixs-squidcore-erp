@@ -498,6 +498,9 @@ return [
 		'invoices' => [
 			'ai_ncm_hint' => __( 'When a product has no NCM, the AI suggests one and the emission is tried once more. Review the suggestions in SquidCore.', 'infixs-squidcore-erp' ),
 			'ai_ncm_label' => __( 'Fill the missing NCM with the AI of SquidCore', 'infixs-squidcore-erp' ),
+			'ai_ncm_found' => __( 'SquidCore AI found: you can turn on the NCM fill now.', 'infixs-squidcore-erp' ),
+			'ai_ncm_recheck' => __( 'Check again', 'infixs-squidcore-erp' ),
+			'ai_ncm_still_missing' => __( 'No AI connected in SquidCore yet. Connect OpenAI or Claude in Integrations and check again.', 'infixs-squidcore-erp' ),
 			'ai_ncm_unavailable' => __( 'Available after you connect OpenAI or Claude in SquidCore. Then test the connection again here.', 'infixs-squidcore-erp' ),
 			'automatic' => __( 'Automatic emission', 'infixs-squidcore-erp' ),
 			'correios' => __( 'Correios Automático', 'infixs-squidcore-erp' ),

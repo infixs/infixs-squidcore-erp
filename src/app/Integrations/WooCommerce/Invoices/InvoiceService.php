@@ -691,11 +691,12 @@ class InvoiceService {
 	}
 
 	/**
-	 * One more automatic attempt letting the AI of SquidCore fill the missing NCM, when the store allows it and
-	 * SquidCore can.
+	 * One more attempt letting the AI of SquidCore fill the missing NCM, when the store allows it and SquidCore can:
+	 * for the automatic emission and for "Issue now" / "Try again" alike, since the option reads as the way the store
+	 * issues its invoices.
 	 */
 	private function willRetryWithAi( InvoiceRecord $record, string $trigger ): bool {
-		return $trigger === self::TRIGGER_AUTOMATIC
+		return in_array( $trigger, [ self::TRIGGER_AUTOMATIC, self::TRIGGER_MANUAL ], true )
 			&& $record->is( InvoiceRecord::BLOCKED )
 			&& ! $record->aiRetried()
 			&& $record->hasAiFillableReasons()

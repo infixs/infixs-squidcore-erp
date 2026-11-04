@@ -229,8 +229,9 @@ class ConnectionService {
 
 	/**
 	 * Asks SquidCore, at most once every few minutes for the whole store, whether it still accepts the saved connection,
-	 * so a revoked connection shows while the panel is open even if nothing else is sent. Only a refusal changes the
-	 * connection: a failure of the network says nothing about it.
+	 * so a revoked connection shows while the panel is open even if nothing else is sent. A refusal disconnects; an
+	 * accepted connection refreshes what the same answer tells (an AI connected in SquidCore, the invoice scopes); a
+	 * failure of the network says nothing and changes nothing.
 	 */
 	public function verify(): void {
 		if ( ! $this->isConnected() || get_transient( self::VERIFY_TRANSIENT ) !== false ) {
@@ -241,14 +242,22 @@ class ConnectionService {
 
 		$response = $this->askHandshake( ( $this->makeClient )( $this->urls->apiUrl(), $this->credentials ) );
 
-		if ( ! is_wp_error( $response ) || ApiErrorMessage::status( $response ) !== 401 ) {
+		if ( is_wp_error( $response ) ) {
+			if ( ApiErrorMessage::status( $response ) === 401 ) {
+				$this->settings->update( 'connection', [
+					'connected' => false,
+					'last_error' => ApiErrorMessage::describe( $response ),
+				] );
+			}
+
 			return;
 		}
 
-		$this->settings->update( 'connection', [
-			'connected' => false,
-			'last_error' => ApiErrorMessage::describe( $response ),
-		] );
+		$data = isset( $response['data'] ) && is_array( $response['data'] ) ? $response['data'] : [];
+
+		if ( ! empty( $data['connected'] ) ) {
+			$this->settings->update( 'connection', $this->capabilities( $data, $this->credentials->method() ) );
+		}
 	}
 
 	/**
@@ -508,9 +517,9 @@ class ConnectionService {
 				'last_handshake_at' => $result['checkedAt'],
 				'last_error' => $connected ? '' : $result['message'],
 				'organization' => $result['organization'] ?? '',
-				'ai_ncm_available' => $connected && ! empty( $result['data']['aiNcmAvailable'] ),
-				'invoice_scopes' => $connected && is_array( $result['data'] ) ? $this->invoiceScopes( $result['data'], $credential->method() ) : '',
-			] );
+			] + ( $connected && is_array( $result['data'] )
+				? $this->capabilities( $result['data'], $credential->method() )
+				: [ 'ai_ncm_available' => false, 'invoice_scopes' => '' ] ) );
 		}
 
 		return [
@@ -562,6 +571,22 @@ class ConnectionService {
 			'siteUrl' => home_url(),
 			'pluginVersion' => $this->pluginVersion,
 		] );
+	}
+
+	/**
+	 * What an accepted handshake tells beyond the connection itself: whether the organization has an AI to fill the
+	 * NCM, and whether the credential may use the invoice routes.
+	 *
+	 * @param array  $handshake Answer of the handshake.
+	 * @param string $method    How the checked credential connects (CredentialProvider::METHOD_*).
+	 *
+	 * @return array{ai_ncm_available: bool, invoice_scopes: string}
+	 */
+	private function capabilities( array $handshake, string $method ): array {
+		return [
+			'ai_ncm_available' => ! empty( $handshake['aiNcmAvailable'] ),
+			'invoice_scopes' => $this->invoiceScopes( $handshake, $method ),
+		];
 	}
 
 	/**

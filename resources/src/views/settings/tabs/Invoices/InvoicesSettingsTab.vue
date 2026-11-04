@@ -6,6 +6,7 @@ import WarningNotice from "@/components/shared/WarningNotice.vue";
 import { useInvoiceLabels } from "@/composables/useInvoiceLabels";
 import { AI_NCM_FOCUS, INVOICE_DELAY_HOURS } from "@/lib/invoices";
 import { useI18n } from "@/composables/useI18n";
+import { resolveErrorMessage } from "@/lib/errors";
 import { useStatusPolling } from "@/composables/useStatusPolling";
 import { useOAuthConnect } from "@/composables/useOAuthConnect";
 import { toRoute } from "@/routes/helpers";
@@ -15,7 +16,7 @@ import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useStatusStore } from "@/stores/useStatusStore";
 import type { AiNcmState, InvoiceSettings } from "@/types/api";
 import type { AcceptableValue } from "reka-ui";
-import { ExternalLink, Info, ListFilter, Loader2, PlugZap } from "lucide-vue-next";
+import { ExternalLink, Info, ListFilter, Loader2, PlugZap, RefreshCw } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 
 const { t, tn } = useI18n();
@@ -24,7 +25,7 @@ const appStore = useAppStore();
 const statusStore = useStatusStore();
 const settingsStore = useSettingsStore();
 const fiscalImportStore = useFiscalImportStore();
-const { connection, ncmCoverage } = storeToRefs(statusStore);
+const { connection, ncmCoverage, isTesting } = storeToRefs(statusStore);
 const { numbering } = storeToRefs(fiscalImportStore);
 const route = useRoute();
 const router = useRouter();
@@ -54,6 +55,27 @@ useStatusPolling(() => isCountingNcm.value);
 watch(invoices, (value) => {
   form.value = { ...value };
 });
+
+/** Asks SquidCore again whether the organization has an AI, right after connecting OpenAI or Claude there. */
+async function recheckAi() {
+  try {
+    await statusStore.testConnection();
+  } catch (error) {
+    toast.error(resolveErrorMessage(error));
+    return;
+  }
+
+  if (aiNcmAvailable.value) {
+    toast.success(t("settings.invoices.ai_ncm_found", "SquidCore AI found: you can turn on the NCM fill now."));
+  } else {
+    toast.info(
+      t(
+        "settings.invoices.ai_ncm_still_missing",
+        "No AI connected in SquidCore yet. Connect OpenAI or Claude in Integrations and check again.",
+      ),
+    );
+  }
+}
 
 function onDelayChange(value: AcceptableValue) {
   form.value.delayHours = Number(value);
@@ -277,15 +299,29 @@ async function save() {
             )
           }}
         </p>
-        <p v-else class="isce:flex isce:items-start isce:gap-2 isce:text-xs isce:text-muted-foreground">
-          <Info class="isce:mt-0.5 isce:size-3.5 isce:shrink-0" />
-          {{
-            t(
-              "settings.invoices.ai_ncm_unavailable",
-              "Available after you connect OpenAI or Claude in SquidCore. Then test the connection again here.",
-            )
-          }}
-        </p>
+        <div v-else class="isce:flex isce:flex-wrap isce:items-center isce:gap-x-3 isce:gap-y-1">
+          <p class="isce:flex isce:items-start isce:gap-2 isce:text-xs isce:text-muted-foreground">
+            <Info class="isce:mt-0.5 isce:size-3.5 isce:shrink-0" />
+            {{
+              t(
+                "settings.invoices.ai_ncm_unavailable",
+                "Available after you connect OpenAI or Claude in SquidCore. Then test the connection again here.",
+              )
+            }}
+          </p>
+          <Button
+            type="button"
+            variant="link"
+            size="sm"
+            class="isce:h-auto isce:p-0 isce:text-xs"
+            :disabled="isTesting"
+            @click="recheckAi"
+          >
+            <Loader2 v-if="isTesting" class="isce:size-3.5 isce:animate-spin" />
+            <RefreshCw v-else class="isce:size-3.5" />
+            {{ t("settings.invoices.ai_ncm_recheck", "Check again") }}
+          </Button>
+        </div>
         <!-- With the AI available, the checkbox above is the action itself. -->
         <div v-if="aiState === 'unavailable'">
           <AiNcmAction :state="aiState" />

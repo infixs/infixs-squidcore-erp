@@ -4,7 +4,7 @@ Tags: erp, nfe, nota fiscal, invoice, brazil
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -158,6 +158,11 @@ No. Sync and invoice requests run in the background, with automatic retries when
 6. NCM field on the product
 
 == Changelog ==
+
+= 1.6.1 - 2026-11-04 =
+* Invoices: the AI connected in SquidCore shows up in the plugin without testing the connection again
+* Invoices: "Check again" button next to the AI option in the invoice settings
+* Invoices: "Issue now" and "Try again" also fill the missing NCM with the AI when the option is on
 
 = 1.6.0 - 2026-11-04 =
 * Correios Automático: issue the NF-e from the pre-posting window and the order menu of Correios Automático

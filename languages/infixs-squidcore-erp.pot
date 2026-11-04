@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: SquidCore - ERP & CRM Platform 1.6.0\n"
+"Project-Id-Version: SquidCore - ERP & CRM Platform 1.6.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/infixs-squidcore-erp\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-04T22:00:08+00:00\n"
+"POT-Creation-Date: 2026-11-04T23:22:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: infixs-squidcore-erp\n"
@@ -67,14 +67,14 @@ msgstr ""
 
 #: src/app/Admin/Menu.php:31
 #: src/resources/lang/translations.php:123
-#: src/resources/lang/translations.php:539
+#: src/resources/lang/translations.php:542
 msgid "Synchronization"
 msgstr ""
 
 #: src/app/Admin/Menu.php:35
 #: src/resources/lang/translations.php:89
 #: src/resources/lang/translations.php:158
-#: src/resources/lang/translations.php:538
+#: src/resources/lang/translations.php:541
 msgid "Invoices"
 msgstr ""
 
@@ -560,56 +560,56 @@ msgstr ""
 msgid "Reason: %s"
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:712
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:713
 #: src/app/Integrations/WooCommerce/Invoices/PlanLimit/PlanLimitRetry.php:151
 msgid "SquidCore is not connected. Connect the store in the plugin settings and try again."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:718
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:719
 #: src/app/Support/ApiErrorMessage.php:103
 msgid "SquidCore is not accepting orders from this store. Enable receiving orders in the WooCommerce integration in SquidCore and try again."
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:753
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:754
 msgid "SquidCore did not return the invoice. Refresh to check it."
 msgstr ""
 
 #. translators: 1: error message, 2: date and time of the next attempt.
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:802
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:803
 #, php-format
 msgid "SquidCore: the invoice could not be issued now (%1$s). New attempt on %2$s."
 msgstr ""
 
 #. translators: %s: error message.
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:872
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:873
 #, php-format
 msgid "SquidCore: the invoice was not issued. %s"
 msgstr ""
 
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:969
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:970
 msgid "invoice (NF-e) sent, waiting for SEFAZ."
 msgstr ""
 
 #. translators: 1: invoice number, 2: series, 3: access key.
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:972
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:973
 #, php-format
 msgid "invoice (NF-e) number %1$s, series %2$s authorized. Access key: %3$s."
 msgstr ""
 
 #. translators: %s: message returned by SEFAZ.
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:975
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:976
 #, php-format
 msgid "the invoice (NF-e) was rejected. %s"
 msgstr ""
 
 #. translators: %s: message returned by SEFAZ.
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:978
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:979
 #, php-format
 msgid "the invoice (NF-e) was denied by SEFAZ. %s"
 msgstr ""
 
 #. translators: %s: invoice number.
-#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:981
+#: src/app/Integrations/WooCommerce/Invoices/InvoiceService.php:982
 #, php-format
 msgid "invoice (NF-e) number %s cancelled."
 msgstr ""
@@ -932,24 +932,24 @@ msgid "Connect with SquidCore or fill in the access token before testing."
 msgstr ""
 
 #. translators: %s: why the request to SquidCore failed.
-#: src/app/Services/ConnectionService.php:393
+#: src/app/Services/ConnectionService.php:402
 #, php-format
 msgid "The store was disconnected, but SquidCore could not be told (%s). Revoke the access of \"SquidCore para WooCommerce\" in SquidCore, under Settings › Connected apps."
 msgstr ""
 
-#: src/app/Services/ConnectionService.php:469
+#: src/app/Services/ConnectionService.php:478
 msgid "The SquidCore API address changed since the store was connected. Connect with SquidCore again."
 msgstr ""
 
-#: src/app/Services/ConnectionService.php:474
+#: src/app/Services/ConnectionService.php:483
 msgid "The SquidCore API address changed since the last check. Test the connection again."
 msgstr ""
 
-#: src/app/Services/ConnectionService.php:541
+#: src/app/Services/ConnectionService.php:550
 msgid "Connection established successfully."
 msgstr ""
 
-#: src/app/Services/ConnectionService.php:543
+#: src/app/Services/ConnectionService.php:552
 msgid "The SquidCore API did not confirm the connection."
 msgstr ""
 
@@ -1372,7 +1372,7 @@ msgid "Test connection"
 msgstr ""
 
 #: src/resources/lang/translations.php:43
-#: src/resources/lang/translations.php:536
+#: src/resources/lang/translations.php:539
 msgid "Connection"
 msgstr ""
 
@@ -1527,7 +1527,7 @@ msgid "Authorized (30 days)"
 msgstr ""
 
 #: src/resources/lang/translations.php:87
-#: src/resources/lang/translations.php:502
+#: src/resources/lang/translations.php:505
 msgid "Automatic emission"
 msgstr ""
 
@@ -1621,12 +1621,12 @@ msgid "No send recorded yet"
 msgstr ""
 
 #: src/resources/lang/translations.php:116
-#: src/resources/lang/translations.php:533
+#: src/resources/lang/translations.php:536
 msgid "Sync options"
 msgstr ""
 
 #: src/resources/lang/translations.php:117
-#: src/resources/lang/translations.php:530
+#: src/resources/lang/translations.php:533
 msgid "Orders"
 msgstr ""
 
@@ -1803,7 +1803,7 @@ msgid "Authorized on"
 msgstr ""
 
 #: src/resources/lang/translations.php:182
-#: src/resources/lang/translations.php:508
+#: src/resources/lang/translations.php:511
 msgid "Customer"
 msgstr ""
 
@@ -2163,7 +2163,7 @@ msgid "Could not load the import."
 msgstr ""
 
 #: src/resources/lang/translations.php:343
-#: src/resources/lang/translations.php:537
+#: src/resources/lang/translations.php:540
 msgid "Import data"
 msgstr ""
 
@@ -2664,198 +2664,210 @@ msgid "Fill the missing NCM with the AI of SquidCore"
 msgstr ""
 
 #: src/resources/lang/translations.php:501
-msgid "Available after you connect OpenAI or Claude in SquidCore. Then test the connection again here."
+msgid "SquidCore AI found: you can turn on the NCM fill now."
+msgstr ""
+
+#: src/resources/lang/translations.php:502
+msgid "Check again"
 msgstr ""
 
 #: src/resources/lang/translations.php:503
-msgid "Correios Automático"
+msgid "No AI connected in SquidCore yet. Connect OpenAI or Claude in Integrations and check again."
 msgstr ""
 
 #: src/resources/lang/translations.php:504
-msgid "The pre-posting goes out with the number and key of the invoice as soon as it is authorized."
-msgstr ""
-
-#: src/resources/lang/translations.php:505
-msgid "Wait for the invoice before the automatic pre-posting of Correios"
+msgid "Available after you connect OpenAI or Claude in SquidCore. Then test the connection again here."
 msgstr ""
 
 #: src/resources/lang/translations.php:506
-msgid "Requires Correios Automático PRO, which makes the automatic pre-posting."
+msgid "Correios Automático"
 msgstr ""
 
 #: src/resources/lang/translations.php:507
-msgid "Needs a version of Correios Automático PRO that can wait for the invoice. Update Correios Automático PRO to use it."
+msgid "The pre-posting goes out with the number and key of the invoice as soon as it is authorized."
+msgstr ""
+
+#: src/resources/lang/translations.php:508
+msgid "Wait for the invoice before the automatic pre-posting of Correios"
 msgstr ""
 
 #: src/resources/lang/translations.php:509
-msgid "Waiting gives time to change or cancel the order before the invoice exists. Orders cancelled while waiting get no invoice."
+msgid "Requires Correios Automático PRO, which makes the automatic pre-posting."
 msgstr ""
 
 #: src/resources/lang/translations.php:510
-msgid "SquidCore issues the NF-e of the paid orders with the tax data of your organization."
-msgstr ""
-
-#: src/resources/lang/translations.php:511
-msgid "The customer always finds the invoice in the order details of My Account."
+msgid "Needs a version of Correios Automático PRO that can wait for the invoice. Update Correios Automático PRO to use it."
 msgstr ""
 
 #: src/resources/lang/translations.php:512
-msgid "DANFE and XML links in the completed order e-mail"
+msgid "Waiting gives time to change or cancel the order before the invoice exists. Orders cancelled while waiting get no invoice."
 msgstr ""
 
 #: src/resources/lang/translations.php:513
-msgid "Turned off, invoices are issued only when you click \"Issue now\" on the order screen."
+msgid "SquidCore issues the NF-e of the paid orders with the tax data of your organization."
 msgstr ""
 
 #: src/resources/lang/translations.php:514
-msgid "Issue the NF-e automatically after the payment"
+msgid "The customer always finds the invoice in the order details of My Account."
 msgstr ""
 
 #: src/resources/lang/translations.php:515
-msgid "The saved access token cannot issue invoices: it was generated before NF-e support. Generate a new token in SquidCore and save it in Connection."
+msgid "DANFE and XML links in the completed order e-mail"
 msgstr ""
 
 #: src/resources/lang/translations.php:516
-msgid "The SquidCore connection cannot issue invoices: the NF-e permissions were not approved. Reconnect with SquidCore and approve every permission."
+msgid "Turned off, invoices are issued only when you click \"Issue now\" on the order screen."
 msgstr ""
 
 #: src/resources/lang/translations.php:517
-msgid "Missing NCM"
+msgid "Issue the NF-e automatically after the payment"
 msgstr ""
 
 #: src/resources/lang/translations.php:518
-msgid "{count} products are still without NCM."
+msgid "The saved access token cannot issue invoices: it was generated before NF-e support. Generate a new token in SquidCore and save it in Connection."
 msgstr ""
 
 #: src/resources/lang/translations.php:519
-msgid "1 product is still without NCM."
+msgid "The SquidCore connection cannot issue invoices: the NF-e permissions were not approved. Reconnect with SquidCore and approve every permission."
 msgstr ""
 
 #: src/resources/lang/translations.php:520
-msgid "This store is not connected to SquidCore. No invoice is issued until the connection is confirmed."
+msgid "Missing NCM"
 msgstr ""
 
 #: src/resources/lang/translations.php:521
-msgid "Order sync is turned off. Each order is still sent to SquidCore right before its invoice is issued."
+msgid "{count} products are still without NCM."
 msgstr ""
 
 #: src/resources/lang/translations.php:522
-msgid "Invoices (NF-e)"
+msgid "1 product is still without NCM."
 msgstr ""
 
 #: src/resources/lang/translations.php:523
-msgid "When to issue"
+msgid "This store is not connected to SquidCore. No invoice is issued until the connection is confirmed."
+msgstr ""
+
+#: src/resources/lang/translations.php:524
+msgid "Order sync is turned off. Each order is still sent to SquidCore right before its invoice is issued."
+msgstr ""
+
+#: src/resources/lang/translations.php:525
+msgid "Invoices (NF-e)"
 msgstr ""
 
 #: src/resources/lang/translations.php:526
-msgid "Catalog"
-msgstr ""
-
-#: src/resources/lang/translations.php:527
-msgid "Products, variations and categories created, changed or deleted in the store."
-msgstr ""
-
-#: src/resources/lang/translations.php:528
-msgid "Sync catalog (products and categories)"
+msgid "When to issue"
 msgstr ""
 
 #: src/resources/lang/translations.php:529
-msgid "Choose what this store sends to SquidCore."
+msgid "Catalog"
+msgstr ""
+
+#: src/resources/lang/translations.php:530
+msgid "Products, variations and categories created, changed or deleted in the store."
 msgstr ""
 
 #: src/resources/lang/translations.php:531
-msgid "New orders, status changes and confirmed payments."
+msgid "Sync catalog (products and categories)"
 msgstr ""
 
 #: src/resources/lang/translations.php:532
+msgid "Choose what this store sends to SquidCore."
+msgstr ""
+
+#: src/resources/lang/translations.php:534
+msgid "New orders, status changes and confirmed payments."
+msgstr ""
+
+#: src/resources/lang/translations.php:535
 msgid "Sync orders"
 msgstr ""
 
-#: src/resources/lang/translations.php:543
+#: src/resources/lang/translations.php:546
 msgid "Generate token in SquidCore"
 msgstr ""
 
-#: src/resources/lang/translations.php:544
+#: src/resources/lang/translations.php:547
 msgid "Help"
 msgstr ""
 
-#: src/resources/lang/translations.php:545
+#: src/resources/lang/translations.php:548
 msgid "WhatsApp Support"
 msgstr ""
 
-#: src/resources/lang/translations.php:548
+#: src/resources/lang/translations.php:551
 msgid "Showing {showing} of {total} · Page {page} of {pages}"
 msgstr ""
 
-#: src/resources/lang/translations.php:551
+#: src/resources/lang/translations.php:554
 msgid "I changed my mind"
 msgstr ""
 
-#: src/resources/lang/translations.php:552
+#: src/resources/lang/translations.php:555
 msgid "It's a shame you are about to deactivate SquidCore. If you have any questions or issues, please contact support."
 msgstr ""
 
-#: src/resources/lang/translations.php:553
+#: src/resources/lang/translations.php:556
 msgid "Write a comment, suggestion or question (optional)"
 msgstr ""
 
-#: src/resources/lang/translations.php:554
+#: src/resources/lang/translations.php:557
 msgid "Your email (optional)"
 msgstr ""
 
-#: src/resources/lang/translations.php:555
+#: src/resources/lang/translations.php:558
 msgid "Invalid email or leave empty."
 msgstr ""
 
-#: src/resources/lang/translations.php:556
+#: src/resources/lang/translations.php:559
 msgid "Select a reason"
 msgstr ""
 
-#: src/resources/lang/translations.php:557
+#: src/resources/lang/translations.php:560
 msgid "Select a reason."
 msgstr ""
 
-#: src/resources/lang/translations.php:558
+#: src/resources/lang/translations.php:561
 msgid "Skip & deactivate"
 msgstr ""
 
-#: src/resources/lang/translations.php:559
+#: src/resources/lang/translations.php:562
 msgid "Submit & deactivate"
 msgstr ""
 
-#: src/resources/lang/translations.php:560
+#: src/resources/lang/translations.php:563
 msgid "Can we help you?"
 msgstr ""
 
-#: src/resources/lang/translations.php:562
+#: src/resources/lang/translations.php:565
 msgid "The plugin broke my site"
 msgstr ""
 
-#: src/resources/lang/translations.php:563
+#: src/resources/lang/translations.php:566
 msgid "Conflict with other plugins"
 msgstr ""
 
-#: src/resources/lang/translations.php:564
+#: src/resources/lang/translations.php:567
 msgid "It did not meet my expectations"
 msgstr ""
 
-#: src/resources/lang/translations.php:565
+#: src/resources/lang/translations.php:568
 msgid "I found a better plugin"
 msgstr ""
 
-#: src/resources/lang/translations.php:566
+#: src/resources/lang/translations.php:569
 msgid "I am testing"
 msgstr ""
 
-#: src/resources/lang/translations.php:567
+#: src/resources/lang/translations.php:570
 msgid "I no longer need the plugin"
 msgstr ""
 
-#: src/resources/lang/translations.php:568
+#: src/resources/lang/translations.php:571
 msgid "Other"
 msgstr ""
 
-#: src/resources/lang/translations.php:569
+#: src/resources/lang/translations.php:572
 msgid "The plugin stopped working suddenly"
 msgstr ""
 
