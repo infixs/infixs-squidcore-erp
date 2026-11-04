@@ -469,6 +469,14 @@ class InvoiceRecord {
 			|| $this->isEmittingStale( $now );
 	}
 
+	/**
+	 * Whether SquidCore may have news about the invoice: it has an invoice there, or the emission is on its way or
+	 * failed (the request may have gone through without its answer).
+	 */
+	public function canRefresh(): bool {
+		return $this->id() !== '' || $this->is( self::PROCESSING, self::FAILED );
+	}
+
 	private function touch(): self {
 		$this->data['updatedAt'] = time();
 

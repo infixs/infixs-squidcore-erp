@@ -28,6 +28,11 @@ class CorreiosInvoiceBridge {
 
 	public const SOURCE = 'squidcore';
 
+	/**
+	 * Name of the invoice provider shown by Correios Automático.
+	 */
+	public const SOURCE_LABEL = 'SquidCore';
+
 	public const PLUGIN_SLUG = 'infixs-squidcore';
 
 	/**
@@ -134,7 +139,7 @@ class CorreiosInvoiceBridge {
 			'invoice_number' => $record->number(),
 			'invoice_key' => $record->key(),
 			'source' => self::SOURCE,
-			'source_label' => 'SquidCore',
+			'source_label' => self::SOURCE_LABEL,
 		];
 	}
 
@@ -163,7 +168,7 @@ class CorreiosInvoiceBridge {
 
 		$record = $this->service->find( $order );
 
-		if ( ! $record || ! $this->danfe->isEligible( $record ) || ! $this->holdsInvoice( $record, $context['invoice'] ?? null ) ) {
+		if ( ! $record || ! $this->danfe->isEligible( $record ) || ! self::holdsInvoice( $record, $context['invoice'] ?? null ) ) {
 			return $danfe;
 		}
 
@@ -201,7 +206,7 @@ class CorreiosInvoiceBridge {
 		$context = is_array( $context ) ? $context : [];
 		$record = empty( $context['vendor_id'] ) ? $this->service->find( $order ) : null;
 
-		if ( ! $record || ! isset( self::PANEL_STATES[ $record->state() ] ) || ! $this->holdsInvoice( $record, $context['invoice'] ?? null ) ) {
+		if ( ! $record || ! isset( self::PANEL_STATES[ $record->state() ] ) || ! self::holdsInvoice( $record, $context['invoice'] ?? null ) ) {
 			return $status;
 		}
 
@@ -227,7 +232,7 @@ class CorreiosInvoiceBridge {
 			'label' => $this->panelLabel( $record ),
 			'detail' => $detail,
 			'source' => self::SOURCE,
-			'source_label' => 'SquidCore',
+			'source_label' => self::SOURCE_LABEL,
 			'danfe' => $this->danfe->readiness( $order, $record ),
 			'actions' => $this->panelActions( $order, $record ),
 		];
@@ -375,7 +380,7 @@ class CorreiosInvoiceBridge {
 		return [
 			'schema' => self::DANFE_SCHEMA,
 			'source' => self::SOURCE,
-			'source_label' => 'SquidCore',
+			'source_label' => self::SOURCE_LABEL,
 			'environment' => $snapshot->environment(),
 			'key' => $snapshot->key(),
 			'number' => $snapshot->number(),
@@ -408,14 +413,15 @@ class CorreiosInvoiceBridge {
 	}
 
 	/**
-	 * Whether the NF-e Correios Automático resolved for the order (when it says) is the invoice of SquidCore.
+	 * Whether the NF-e Correios Automático resolved for the order (when it says) is the invoice of SquidCore. An
+	 * order without an invoice record holds only an NF-e of someone else.
 	 *
 	 * @param mixed $invoice Resolved NF-e: invoice_key, source...
 	 */
-	private function holdsInvoice( InvoiceRecord $record, $invoice ): bool {
-		$key = is_array( $invoice ) ? $this->digits( $invoice['invoice_key'] ?? '' ) : '';
+	public static function holdsInvoice( ?InvoiceRecord $record, $invoice ): bool {
+		$key = is_array( $invoice ) ? InvoiceRecord::accessKey( $invoice['invoice_key'] ?? '' ) : '';
 
-		return $key === '' || $key === $record->key();
+		return $key === '' || ( $record !== null && $key === $record->key() );
 	}
 
 	private function panelLabel( InvoiceRecord $record ): string {

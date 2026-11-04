@@ -8,6 +8,7 @@ use Infixs\SquidCore\AvelPress\Support\ServiceProvider;
 use Infixs\SquidCore\Admin\OAuthCallback;
 use Infixs\SquidCore\Integrations\CorreiosAutomatico\CorreiosAutomatico;
 use Infixs\SquidCore\Integrations\CorreiosAutomatico\CorreiosInvoiceBridge;
+use Infixs\SquidCore\Integrations\CorreiosAutomatico\CorreiosInvoiceIssuer;
 use Infixs\SquidCore\Integrations\CorreiosAutomatico\CorreiosTrackingCodes;
 use Infixs\SquidCore\Integrations\WebmaniaBR\WebmaniaBR;
 use Infixs\SquidCore\Integrations\WebmaniaBR\WebmaniaFiscalSource;
@@ -503,6 +504,14 @@ class AppServiceProvider extends ServiceProvider {
 			);
 		} );
 
+		$this->app->singleton( CorreiosInvoiceIssuer::class, function ( $app ) {
+			return new CorreiosInvoiceIssuer(
+				$app->make( InvoiceService::class ),
+				$app->make( ConnectionService::class ),
+				$app->make( InvoiceEligibility::class )
+			);
+		} );
+
 		$this->app->singleton( WebmaniaInvoiceHistory::class, function () {
 			return new WebmaniaInvoiceHistory();
 		} );
@@ -704,6 +713,7 @@ class AppServiceProvider extends ServiceProvider {
 		}
 		$this->app->make( DanfeSnapshotService::class )->register();
 		$this->app->make( CorreiosInvoiceBridge::class )->register();
+		$this->app->make( CorreiosInvoiceIssuer::class )->register();
 		$this->app->make( WebmaniaInvoiceBridge::class )->register();
 
 		$this->app->make( InvoiceAdminDownload::class )->register();

@@ -61,7 +61,7 @@ class InvoicePresenter {
 			] : null,
 			'cancelDeadline' => $deadline ? gmdate( 'c', $deadline ) : null,
 			'canEmit' => $record->canEmit( $now ),
-			'canRefresh' => $record->id() !== '' || $record->is( InvoiceRecord::PROCESSING, InvoiceRecord::FAILED ),
+			'canRefresh' => $record->canRefresh(),
 			'canCancel' => $record->canCancel( $now ),
 			'downloads' => $has_files
 				? $this->downloads( $order->get_id(), '', $record->is( InvoiceRecord::CANCELLED ) )

@@ -37,11 +37,11 @@ class InvoiceEligibility {
 	 * @return string|null Message for the order note, null when the order gets the invoice.
 	 */
 	public function automaticSkipReason( \WC_Order $order, string $trigger ): ?string {
-		if ( $order->get_meta( 'has_sub_order', true ) ) {
+		if ( $this->isSplitIntoSubOrders( $order ) ) {
 			return __( 'Automatic invoice skipped: the order was split into marketplace sub-orders.', 'infixs-squidcore-erp' );
 		}
 
-		if ( $order->get_parent_id() > 0 ) {
+		if ( $this->isSubOrder( $order ) ) {
 			return __( 'Automatic invoice skipped: this is a marketplace sub-order.', 'infixs-squidcore-erp' );
 		}
 
@@ -110,6 +110,20 @@ class InvoiceEligibility {
 	 */
 	public function isSaleEnded( \WC_Order $order ): bool {
 		return in_array( $order->get_status(), self::ENDED_STATUSES, true );
+	}
+
+	/**
+	 * Whether a marketplace (Dokan, for example) split the order into sub-orders, one for each vendor.
+	 */
+	public function isSplitIntoSubOrders( \WC_Order $order ): bool {
+		return (bool) $order->get_meta( 'has_sub_order', true );
+	}
+
+	/**
+	 * Whether the order is the sub-order a marketplace created for one vendor out of the order of the customer.
+	 */
+	public function isSubOrder( \WC_Order $order ): bool {
+		return $order->get_parent_id() > 0;
 	}
 
 	private function billingCountry( \WC_Order $order ): string {

@@ -12,7 +12,7 @@
  * Plugin Name:       		SquidCore - ERP & CRM Platform
  * Plugin URI:        		https://squidcore.com
  * Description:       		Manage your business operations with SquidCore ERP & CRM Platform.
- * Version:           		1.5.1
+ * Version:           		1.6.0
  * Requires at least: 		6.0
  * Requires PHP:      		7.4
  * Requires Plugins:  		woocommerce
