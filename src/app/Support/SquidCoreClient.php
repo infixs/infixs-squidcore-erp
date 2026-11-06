@@ -57,6 +57,13 @@ class SquidCoreClient {
 	protected $downloadTimeout = self::DOWNLOAD_TIMEOUT;
 
 	/**
+	 * Seconds a request may take.
+	 *
+	 * @var int
+	 */
+	protected $timeout = self::TIMEOUT;
+
+	/**
 	 * @param string|null $baseUrl
 	 * @param CredentialProvider $credentials
 	 * @param int $maxAttempts Total attempts per request; interactive calls use 1 to fail fast.
@@ -91,6 +98,17 @@ class SquidCoreClient {
 	public function withDownloadTimeout( int $seconds ): self {
 		$client = clone $this;
 		$client->downloadTimeout = min( self::DOWNLOAD_TIMEOUT, max( 1, $seconds ) );
+
+		return $client;
+	}
+
+	/**
+	 * Same client with another wait per request, for an answer SquidCore takes long to build (the AI filling the NCM of
+	 * several products).
+	 */
+	public function withTimeout( int $seconds ): self {
+		$client = clone $this;
+		$client->timeout = max( 1, $seconds );
 
 		return $client;
 	}
@@ -194,7 +212,7 @@ class SquidCoreClient {
 
 		$request_args = array_merge( [
 			'method' => $method,
-			'timeout' => self::TIMEOUT,
+			'timeout' => $this->timeout,
 			'headers' => $this->getHeaders( $token ),
 		], $args );
 

@@ -19,6 +19,9 @@ use Infixs\SquidCore\Integrations\WooCommerce\Products\FiscalImport\FiscalImport
 use Infixs\SquidCore\Integrations\WooCommerce\Products\ProductNcmStore;
 use Infixs\SquidCore\Integrations\WooCommerce\Products\FiscalImport\FiscalImportRunRepository;
 use Infixs\SquidCore\Integrations\WooCommerce\Products\FiscalImport\FiscalImportWatchdog;
+use Infixs\SquidCore\Integrations\WooCommerce\Products\NcmAi\NcmAiAvailability;
+use Infixs\SquidCore\Integrations\WooCommerce\Products\NcmAi\NcmAiFillRepository;
+use Infixs\SquidCore\Integrations\WooCommerce\Products\NcmAi\NcmAiFillRunner;
 use Infixs\SquidCore\Integrations\WooCommerce\Products\NcmCoverage;
 use Infixs\SquidCore\Integrations\WooCommerce\SyncDispatcher;
 use Infixs\SquidCore\Integrations\WooCommerce\SyncStatusRepository;
@@ -70,11 +73,13 @@ class UninstallService {
 		FiscalImportJobs::BATCH_HOOK,
 		FiscalImportJobs::SCAN_HOOK,
 		FiscalImportJobs::PUSH_HOOK,
+		NcmAiFillRunner::HOOK,
 	];
 
 	/**
 	 * Options of the NCM copy, the NCM count, the fiscal import (state, lists, pending push, lock, activation mark), the
-	 * DANFE backfill and the re-emission of the invoices the plan limit refused.
+	 * AI filling of the NCM (run, lists, lock), the DANFE backfill and the re-emission of the invoices the plan limit
+	 * refused.
 	 */
 	private const FEATURE_OPTIONS = [
 		CorreiosNcmCopy::OPTION,
@@ -85,13 +90,17 @@ class UninstallService {
 		FiscalImportRunRepository::PUSH_PENDING_OPTION,
 		FiscalImportRunRepository::LOCK,
 		FiscalImportAutoOpen::OPTION,
+		NcmAiFillRepository::OPTION,
+		NcmAiFillRepository::ITEMS_OPTION,
+		NcmAiFillRepository::LOCK,
 		DanfeBackfill::OPTION,
 		PlanLimitRetry::OPTION,
 	];
 
 	/**
 	 * Cached results of the fiscal import (WebmaniaBR probe, scan, watchdog throttle and numbering check), the use of
-	 * the month of the plan and the count of invoices the plan limit refused.
+	 * the month of the plan, the count of invoices the plan limit refused and a SquidCore without the product NCM
+	 * routes.
 	 */
 	private const FEATURE_TRANSIENTS = [
 		WebmaniaBR::PROBE_TRANSIENT,
@@ -101,6 +110,7 @@ class UninstallService {
 		InvoiceUsage::TRANSIENT,
 		InvoiceAttentionNotice::PLAN_LIMIT_TRANSIENT,
 		ConnectionService::VERIFY_TRANSIENT,
+		NcmAiAvailability::UNSUPPORTED_TRANSIENT,
 	];
 
 	/**

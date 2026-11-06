@@ -5,6 +5,8 @@ namespace Infixs\SquidCore\Integrations\WooCommerce\Serializers;
 use Infixs\SquidCore\Integrations\CorreiosAutomatico\CorreiosTrackingCodes;
 use Infixs\SquidCore\Integrations\WooCommerce\CheckoutBlockFields;
 use Infixs\SquidCore\Integrations\WooCommerce\Products\ProductNcmResolver;
+use Infixs\SquidCore\Integrations\WooCommerce\Shipping\ShippingLineCarrier;
+use Infixs\SquidCore\Integrations\WooCommerce\Shipping\ShippingLinePackage;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -41,12 +43,20 @@ class OrderSerializer {
 	protected $trackingCodes;
 
 	/**
+	 * @var ShippingLineCarrier
+	 */
+	protected $carriers;
+
+	/**
 	 * @param ProductNcmResolver $ncmResolver
 	 * @param CorreiosTrackingCodes|null $trackingCodes Without it the payload says nothing about tracking codes.
+	 * @param ShippingLineCarrier|null $carriers Carrier of each shipping line; without it, the one the filter or the
+	 *                                           Melhor Envio metas tell.
 	 */
-	public function __construct( ProductNcmResolver $ncmResolver, ?CorreiosTrackingCodes $trackingCodes = null ) {
+	public function __construct( ProductNcmResolver $ncmResolver, ?CorreiosTrackingCodes $trackingCodes = null, ?ShippingLineCarrier $carriers = null ) {
 		$this->ncmResolver = $ncmResolver;
 		$this->trackingCodes = $trackingCodes;
+		$this->carriers = $carriers ?: new ShippingLineCarrier();
 	}
 
 	/**
@@ -202,11 +212,19 @@ class OrderSerializer {
 		return $line_items;
 	}
 
+	/**
+	 * Each line also says, when it can be told, the carrier that ships it ("carrier") and the volumes it ships
+	 * ("package"), for the transport group of the invoice; SquidCore reads the method of the other lines.
+	 *
+	 * @param \WC_Order $order
+	 *
+	 * @return array
+	 */
 	protected function serializeShippingLines( \WC_Order $order ): array {
 		$lines = [];
 
 		foreach ( $order->get_shipping_methods() as $item ) {
-			$lines[] = [
+			$line = [
 				'id' => $item->get_id(),
 				'method_id' => $item->get_method_id(),
 				'instance_id' => (string) $item->get_instance_id(),
@@ -214,6 +232,19 @@ class OrderSerializer {
 				'total' => (string) $item->get_total(),
 				'total_tax' => (string) $item->get_total_tax(),
 			];
+
+			$carrier = $this->carriers->resolve( $item, $order );
+			$package = ShippingLinePackage::get( $item );
+
+			if ( null !== $carrier ) {
+				$line['carrier'] = $carrier;
+			}
+
+			if ( null !== $package ) {
+				$line['package'] = $package;
+			}
+
+			$lines[] = $line;
 		}
 
 		return $lines;

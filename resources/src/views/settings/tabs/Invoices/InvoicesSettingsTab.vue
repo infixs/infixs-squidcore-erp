@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AiNcmAction from "@/components/fiscal/AiNcmAction.vue";
+import NcmAiFill from "@/components/fiscal/ncm-ai/NcmAiFill.vue";
 import NumberingCard from "@/components/fiscal/NumberingCard.vue";
 import OptionsGroup from "@/components/shared/OptionsGroup.vue";
 import WarningNotice from "@/components/shared/WarningNotice.vue";
@@ -275,6 +276,12 @@ async function save() {
             {{ t("coverage.view_missing", "See products without NCM") }}
           </Button>
         </div>
+        <!-- Fills the products without NCM with the AI of SquidCore, in the background; shows the last filling too. -->
+        <NcmAiFill
+          v-if="ncmCoverage"
+          :without-ncm="ncmCoverage.withoutNcm"
+          :count-outdated="ncmCoverage.stale || ncmCoverage.computing"
+        />
         <div class="isce:flex isce:items-center isce:gap-3">
           <!-- Without AI the option has no effect: shown off, while the saved value is kept. -->
           <Checkbox

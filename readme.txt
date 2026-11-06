@@ -4,7 +4,7 @@ Tags: erp, nfe, nota fiscal, invoice, brazil
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.1
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -158,6 +158,12 @@ No. Sync and invoice requests run in the background, with automatic retries when
 6. NCM field on the product
 
 == Changelog ==
+
+= 1.7.0 - 2026-11-04 =
+* Products: "Suggest with AI" next to the NCM field when an AI is connected in SquidCore
+* Products: fill the missing NCM of many products with AI in the background, from the invoice settings or the bulk actions, with a list to review
+* Invoices: the NCM the AI fills during the emission is also saved in the WooCommerce product
+* Invoices: the carrier and the volumes of each shipping line (Correios Automático and its extensions, Melhor Envio) go to SquidCore with the order
 
 = 1.6.1 - 2026-11-04 =
 * Invoices: the AI connected in SquidCore shows up in the plugin without testing the connection again

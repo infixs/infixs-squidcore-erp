@@ -7,6 +7,7 @@ use Infixs\SquidCore\Integrations\WooCommerce\Products\ProductNcmResolver;
 use Infixs\SquidCore\Integrations\WooCommerce\Serializers\CategorySerializer;
 use Infixs\SquidCore\Integrations\WooCommerce\Serializers\OrderSerializer;
 use Infixs\SquidCore\Integrations\WooCommerce\Serializers\ProductSerializer;
+use Infixs\SquidCore\Integrations\WooCommerce\Shipping\ShippingLineCarrier;
 use Infixs\SquidCore\Support\ApiErrorMessage;
 use Infixs\SquidCore\Support\BackgroundQueue;
 use Infixs\SquidCore\Support\SquidCoreClient;
@@ -86,15 +87,16 @@ class SyncDispatcher {
 	 * @param BackgroundQueue $queue
 	 * @param ProductNcmResolver $ncmResolver
 	 * @param CorreiosTrackingCodes|null $trackingCodes Tracking codes of Correios Automático in the order pushes.
+	 * @param ShippingLineCarrier|null $carriers Carrier of each shipping line in the order pushes.
 	 */
-	public function __construct( SquidCoreClient $client, SyncStatusRepository $status, ActivityRepository $activity, BackgroundQueue $queue, ProductNcmResolver $ncmResolver, ?CorreiosTrackingCodes $trackingCodes = null ) {
+	public function __construct( SquidCoreClient $client, SyncStatusRepository $status, ActivityRepository $activity, BackgroundQueue $queue, ProductNcmResolver $ncmResolver, ?CorreiosTrackingCodes $trackingCodes = null, ?ShippingLineCarrier $carriers = null ) {
 		$this->client = $client;
 		$this->status = $status;
 		$this->activity = $activity;
 		$this->queue = $queue;
 		$this->productSerializer = new ProductSerializer( $ncmResolver );
 		$this->categorySerializer = new CategorySerializer();
-		$this->orderSerializer = new OrderSerializer( $ncmResolver, $trackingCodes );
+		$this->orderSerializer = new OrderSerializer( $ncmResolver, $trackingCodes, $carriers );
 	}
 
 	/**

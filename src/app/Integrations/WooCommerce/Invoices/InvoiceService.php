@@ -4,6 +4,7 @@ namespace Infixs\SquidCore\Integrations\WooCommerce\Invoices;
 
 use Infixs\SquidCore\Integrations\WooCommerce\ActivityRepository;
 use Infixs\SquidCore\Integrations\WooCommerce\Invoices\PlanLimit\PlanLimitLabels;
+use Infixs\SquidCore\Integrations\WooCommerce\Products\NcmAi\ProductNcmWriter;
 use Infixs\SquidCore\Integrations\WooCommerce\SyncDispatcher;
 use Infixs\SquidCore\Services\ConnectionService;
 use Infixs\SquidCore\Support\ApiErrorMessage;
@@ -112,11 +113,17 @@ class InvoiceService {
 	protected $urls;
 
 	/**
+	 * @var ProductNcmWriter
+	 */
+	protected $ncmWriter;
+
+	/**
 	 * @param ActivityRepository $activity Counters of the activity chart: the emissions that stop waiting on anyone
 	 *                                     but the store owner, and the order pushes the emission gave up on.
 	 * @param OptionLock         $lock     Per-order lock shared by every request that changes the invoice.
 	 * @param SquidCoreUrls      $urls     The plans of the panel, linked from the note of an emission the plan limit
 	 *                                     refused.
+	 * @param ProductNcmWriter   $ncmWriter Brings the NCM the AI of SquidCore filled to the products of the store.
 	 */
 	public function __construct(
 		InvoiceApi $api,
@@ -129,7 +136,8 @@ class InvoiceService {
 		InvoiceProductSync $productSync,
 		ActivityRepository $activity,
 		OptionLock $lock,
-		SquidCoreUrls $urls
+		SquidCoreUrls $urls,
+		ProductNcmWriter $ncmWriter
 	) {
 		$this->api = $api;
 		$this->repository = $repository;
@@ -142,6 +150,7 @@ class InvoiceService {
 		$this->activity = $activity;
 		$this->lock = $lock;
 		$this->urls = $urls;
+		$this->ncmWriter = $ncmWriter;
 	}
 
 	public function find( \WC_Order $order ): ?InvoiceRecord {
@@ -462,7 +471,7 @@ class InvoiceService {
 	/**
 	 * Asks the AI of SquidCore to fill the missing NCM of the order products, then goes on with the blocked invoice:
 	 * when every product got its NCM the emission is tried again right away (as "Try again"); when only some did,
-	 * the record keeps the pending items still open.
+	 * the record keeps the pending items still open. The products of the store without NCM get the one filled.
 	 *
 	 * @param int[] $productIds WooCommerce product ids; empty means every line without NCM.
 	 *
@@ -478,7 +487,7 @@ class InvoiceService {
 		$filled = isset( $response['filled'] ) && is_array( $response['filled'] ) ? array_values( array_filter( $response['filled'], 'is_array' ) ) : [];
 		$failed = isset( $response['failed'] ) && is_array( $response['failed'] ) ? array_values( $response['failed'] ) : [];
 
-		$this->noteNcmFilled( $order, $filled );
+		$this->recordNcmFilled( $order, $filled );
 
 		$retried = false;
 
@@ -678,16 +687,20 @@ class InvoiceService {
 	}
 
 	/**
-	 * Private order note with the products that got an NCM from the AI of SquidCore.
+	 * The products that got an NCM from the AI of SquidCore: a private order note names them, and each one without a
+	 * valid NCM in the store gets it too, so the store stops counting it as without NCM.
 	 *
 	 * @param mixed $filled Products filled by the AI ({wcProductId, ncm, descricao}).
 	 */
-	private function noteNcmFilled( \WC_Order $order, $filled ): void {
-		$note = InvoiceLabels::ncmFilledNote( is_array( $filled ) ? $filled : [] );
+	private function recordNcmFilled( \WC_Order $order, $filled ): void {
+		$filled = is_array( $filled ) ? $filled : [];
+		$note = InvoiceLabels::ncmFilledNote( $filled );
 
 		if ( $note !== '' ) {
 			$order->add_order_note( $note );
 		}
+
+		$this->ncmWriter->writeFilled( $filled );
 	}
 
 	/**
@@ -743,7 +756,7 @@ class InvoiceService {
 
 		// The NCM the AI filled stays in SquidCore even when the emission does not go through.
 		if ( $autoFillNcmWithAi ) {
-			$this->noteNcmFilled( $order, is_wp_error( $response ) ? ( ApiErrorMessage::body( $response )['ncmFilled'] ?? [] ) : ( $response['ncmFilled'] ?? [] ) );
+			$this->recordNcmFilled( $order, is_wp_error( $response ) ? ( ApiErrorMessage::body( $response )['ncmFilled'] ?? [] ) : ( $response['ncmFilled'] ?? [] ) );
 		}
 
 		if ( is_wp_error( $response ) ) {

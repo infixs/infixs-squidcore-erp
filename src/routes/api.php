@@ -5,6 +5,7 @@ use Infixs\SquidCore\Http\Controllers\Api\V1\ActivityV1Controller;
 use Infixs\SquidCore\Http\Controllers\Api\V1\ConnectionV1Controller;
 use Infixs\SquidCore\Http\Controllers\Api\V1\FiscalImportV1Controller;
 use Infixs\SquidCore\Http\Controllers\Api\V1\InvoicesV1Controller;
+use Infixs\SquidCore\Http\Controllers\Api\V1\NcmAiV1Controller;
 use Infixs\SquidCore\Http\Controllers\Api\V1\NcmCoverageV1Controller;
 use Infixs\SquidCore\Http\Controllers\Api\V1\NoticesV1Controller;
 use Infixs\SquidCore\Http\Controllers\Api\V1\OAuthV1Controller;
@@ -48,6 +49,12 @@ Route::prefix( 'infixs-squidcore/v1' )->guards( [ 'manage_options' ] )->group( f
 
 	Route::post( '/notices/{id}/dismiss', [ NoticesV1Controller::class, 'dismiss' ] );
 	Route::post( '/ncm-coverage/refresh', [ NcmCoverageV1Controller::class, 'refresh' ] );
+
+	Route::post( '/ncm-ai-fill/preview', [ NcmAiV1Controller::class, 'preview' ] );
+	Route::post( '/ncm-ai-fill/start', [ NcmAiV1Controller::class, 'start' ] );
+	Route::post( '/ncm-ai-fill/stop', [ NcmAiV1Controller::class, 'stop' ] );
+	Route::post( '/ncm-ai-fill/resume', [ NcmAiV1Controller::class, 'resume' ] );
+	Route::get( '/ncm-ai-fill/runs/{id}/items', [ NcmAiV1Controller::class, 'items' ] );
 } );
 
 /*
@@ -60,4 +67,12 @@ Route::prefix( 'infixs-squidcore/v1' )->guards( [ 'edit_shop_orders' ] )->group(
 	Route::post( '/orders/{id}/invoice/refresh', [ OrderInvoiceV1Controller::class, 'refresh' ] );
 	Route::post( '/orders/{id}/invoice/cancel', [ OrderInvoiceV1Controller::class, 'cancel' ] );
 	Route::post( '/orders/{id}/invoice/fill-ncm', [ OrderInvoiceV1Controller::class, 'fillNcm' ] );
+} );
+
+/*
+ * The NCM suggestion of the product editor, open to who edits products (the route also checks that product). The bulk
+ * filling, its confirmation included, stays with the settings above.
+ */
+Route::prefix( 'infixs-squidcore/v1' )->guards( [ 'edit_products' ] )->group( function () {
+	Route::post( '/products/{id}/ncm-suggestion', [ NcmAiV1Controller::class, 'suggest' ] );
 } );

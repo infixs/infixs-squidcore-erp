@@ -9,6 +9,7 @@ use Infixs\SquidCore\Admin\OAuthCallback;
 use Infixs\SquidCore\Integrations\CorreiosAutomatico\CorreiosAutomatico;
 use Infixs\SquidCore\Integrations\CorreiosAutomatico\CorreiosInvoiceBridge;
 use Infixs\SquidCore\Integrations\CorreiosAutomatico\CorreiosInvoiceIssuer;
+use Infixs\SquidCore\Integrations\CorreiosAutomatico\CorreiosShippingCarrier;
 use Infixs\SquidCore\Integrations\CorreiosAutomatico\CorreiosTrackingCodes;
 use Infixs\SquidCore\Integrations\WebmaniaBR\WebmaniaBR;
 use Infixs\SquidCore\Integrations\WebmaniaBR\WebmaniaFiscalSource;
@@ -62,11 +63,22 @@ use Infixs\SquidCore\Integrations\WooCommerce\Products\FiscalImport\FiscalImport
 use Infixs\SquidCore\Integrations\WooCommerce\Products\FiscalImport\FiscalImportSuggestion;
 use Infixs\SquidCore\Integrations\WooCommerce\Products\FiscalImport\FiscalImportWatchdog;
 use Infixs\SquidCore\Integrations\WooCommerce\Products\MissingNcmProductsView;
+use Infixs\SquidCore\Integrations\WooCommerce\Products\NcmAi\NcmAiAvailability;
+use Infixs\SquidCore\Integrations\WooCommerce\Products\NcmAi\NcmAiFillBatch;
+use Infixs\SquidCore\Integrations\WooCommerce\Products\NcmAi\NcmAiFillBulkAction;
+use Infixs\SquidCore\Integrations\WooCommerce\Products\NcmAi\NcmAiFillRepository;
+use Infixs\SquidCore\Integrations\WooCommerce\Products\NcmAi\NcmAiFillRunner;
+use Infixs\SquidCore\Integrations\WooCommerce\Products\NcmAi\NcmAiFillService;
+use Infixs\SquidCore\Integrations\WooCommerce\Products\NcmAi\NcmAiFillTargets;
+use Infixs\SquidCore\Integrations\WooCommerce\Products\NcmAi\ProductNcmApi;
+use Infixs\SquidCore\Integrations\WooCommerce\Products\NcmAi\ProductNcmSuggestion;
+use Infixs\SquidCore\Integrations\WooCommerce\Products\NcmAi\ProductNcmWriter;
 use Infixs\SquidCore\Integrations\WooCommerce\Products\NcmCoverage;
 use Infixs\SquidCore\Integrations\WooCommerce\Products\NcmCoverageStatus;
 use Infixs\SquidCore\Integrations\WooCommerce\Products\ProductNcmField;
 use Infixs\SquidCore\Integrations\WooCommerce\Products\ProductNcmResolver;
 use Infixs\SquidCore\Integrations\WooCommerce\Products\ProductNcmStore;
+use Infixs\SquidCore\Integrations\WooCommerce\Shipping\ShippingLineCarrier;
 use Infixs\SquidCore\Integrations\WooCommerce\SyncDispatcher;
 use Infixs\SquidCore\Integrations\WooCommerce\SyncStatusRepository;
 use Infixs\SquidCore\Integrations\WooCommerce\WooCommerceApiKeys;
@@ -160,6 +172,10 @@ class AppServiceProvider extends ServiceProvider {
 			return new CorreiosTrackingCodes( $app->make( CorreiosAutomatico::class ) );
 		} );
 
+		$this->app->singleton( ShippingLineCarrier::class, function ( $app ) {
+			return new ShippingLineCarrier( new CorreiosShippingCarrier( $app->make( CorreiosAutomatico::class ) ) );
+		} );
+
 		$this->app->singleton( SyncDispatcher::class, function ( $app ) {
 			return new SyncDispatcher(
 				$app->make( SquidCoreClient::class ),
@@ -167,7 +183,8 @@ class AppServiceProvider extends ServiceProvider {
 				$app->make( ActivityRepository::class ),
 				$app->make( BackgroundQueue::class ),
 				$app->make( ProductNcmResolver::class ),
-				$app->make( CorreiosTrackingCodes::class )
+				$app->make( CorreiosTrackingCodes::class ),
+				$app->make( ShippingLineCarrier::class )
 			);
 		} );
 
@@ -224,6 +241,7 @@ class AppServiceProvider extends ServiceProvider {
 
 		$this->registerInvoices();
 		$this->registerFiscalImportRuns();
+		$this->registerNcmAi();
 	}
 
 	/**
@@ -238,11 +256,20 @@ class AppServiceProvider extends ServiceProvider {
 			return new ProductNcmResolver( $app->make( ProductNcmStore::class ) );
 		} );
 
+		$this->app->singleton( NcmAiAvailability::class, function ( $app ) {
+			return new NcmAiAvailability( $app->make( ConnectionService::class ) );
+		} );
+
+		$this->app->singleton( ProductNcmWriter::class, function ( $app ) {
+			return new ProductNcmWriter( $app->make( ProductNcmStore::class ) );
+		} );
+
 		$this->app->singleton( ProductNcmField::class, function ( $app ) {
 			return new ProductNcmField(
 				$app->make( ProductNcmStore::class ),
 				$app->make( CorreiosAutomatico::class ),
-				$app->make( WebmaniaBR::class )
+				$app->make( WebmaniaBR::class ),
+				$app->make( NcmAiAvailability::class )
 			);
 		} );
 
@@ -417,6 +444,67 @@ class AppServiceProvider extends ServiceProvider {
 	}
 
 	/**
+	 * The NCM by the AI of SquidCore outside the invoice: the suggestion of the product editor and the bulk filling of
+	 * the products without NCM.
+	 */
+	private function registerNcmAi(): void {
+		$this->app->singleton( ProductNcmApi::class, function ( $app ) {
+			return new ProductNcmApi( $app->make( SquidCoreClient::class ) );
+		} );
+
+		$this->app->singleton( ProductNcmSuggestion::class, function ( $app ) {
+			return new ProductNcmSuggestion(
+				$app->make( ProductNcmApi::class ),
+				$app->make( NcmAiAvailability::class ),
+				$app->make( SyncDispatcher::class ),
+				$app->make( SyncService::class )
+			);
+		} );
+
+		$this->app->singleton( NcmAiFillRepository::class, function () {
+			return new NcmAiFillRepository();
+		} );
+
+		$this->app->singleton( NcmAiFillTargets::class, function ( $app ) {
+			return new NcmAiFillTargets( $app->make( NcmCoverage::class ) );
+		} );
+
+		$this->app->singleton( NcmAiFillBatch::class, function ( $app ) {
+			return new NcmAiFillBatch(
+				$app->make( ProductNcmApi::class ),
+				$app->make( ProductNcmWriter::class ),
+				$app->make( SyncDispatcher::class ),
+				$app->make( SyncService::class )
+			);
+		} );
+
+		$this->app->singleton( NcmAiFillRunner::class, function ( $app ) {
+			return new NcmAiFillRunner(
+				$app->make( NcmAiFillRepository::class ),
+				$app->make( NcmAiFillTargets::class ),
+				$app->make( NcmAiFillBatch::class ),
+				$app->make( NcmAiAvailability::class ),
+				$app->make( NcmCoverage::class ),
+				$app->make( OptionLock::class ),
+				$app->make( BackgroundQueue::class )
+			);
+		} );
+
+		$this->app->singleton( NcmAiFillService::class, function ( $app ) {
+			return new NcmAiFillService(
+				$app->make( NcmAiFillRepository::class ),
+				$app->make( NcmAiFillRunner::class ),
+				$app->make( NcmAiFillTargets::class ),
+				$app->make( NcmAiAvailability::class )
+			);
+		} );
+
+		$this->app->singleton( NcmAiFillBulkAction::class, function ( $app ) {
+			return new NcmAiFillBulkAction( $app->make( NcmAiFillService::class ) );
+		} );
+	}
+
+	/**
 	 * Clients for the calls a person waits for: one attempt, to fail fast.
 	 *
 	 * @return \Closure(string, CredentialProvider): SquidCoreClient
@@ -464,7 +552,8 @@ class AppServiceProvider extends ServiceProvider {
 				$app->make( InvoiceProductSync::class ),
 				$app->make( ActivityRepository::class ),
 				$app->make( OptionLock::class ),
-				$app->make( SquidCoreUrls::class )
+				$app->make( SquidCoreUrls::class ),
+				$app->make( ProductNcmWriter::class )
 			);
 		} );
 
@@ -693,6 +782,9 @@ class AppServiceProvider extends ServiceProvider {
 		// Without WooCommerce too, so the activation mark is always consumed (the tab only opens with data to import).
 		$this->app->make( FiscalImportAutoOpen::class )->register();
 
+		// Forgets a SquidCore without the product NCM routes when the store points to another connection.
+		$this->app->make( NcmAiAvailability::class )->register();
+
 		if ( ! class_exists( 'WooCommerce' ) ) {
 			return;
 		}
@@ -706,10 +798,12 @@ class AppServiceProvider extends ServiceProvider {
 
 		$this->app->make( FiscalImportJobs::class )->register();
 		$this->app->make( FiscalImportJournal::class )->register();
+		$this->app->make( NcmAiFillRunner::class )->register();
 
 		if ( is_admin() ) {
 			$this->app->make( MissingNcmProductsView::class )->register();
 			$this->app->make( FiscalImportNotice::class )->register();
+			$this->app->make( NcmAiFillBulkAction::class )->register();
 		}
 		$this->app->make( DanfeSnapshotService::class )->register();
 		$this->app->make( CorreiosInvoiceBridge::class )->register();

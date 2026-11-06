@@ -4,6 +4,7 @@ namespace Infixs\SquidCore\Integrations\WooCommerce\Products;
 
 use Infixs\SquidCore\Integrations\CorreiosAutomatico\CorreiosAutomatico;
 use Infixs\SquidCore\Integrations\WebmaniaBR\WebmaniaBR;
+use Infixs\SquidCore\Integrations\WooCommerce\Products\NcmAi\NcmAiAvailability;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -16,6 +17,8 @@ defined( 'ABSPATH' ) || exit;
  * - A form opened before the NCM changed elsewhere (an import, for example) does not put the old value back: the
  *   field is saved only when the store owner changed it.
  * - With WebmaniaBR active, it says which NCM counts and offers the one WebmaniaBR has for the product.
+ * - While the organization has an AI in SquidCore, an empty field offers "Suggest with AI": the suggestion goes into
+ *   the field, with its description and confidence below, and is saved only with the product.
  *
  * @package Infixs\SquidCore
  * @since   1.0.0
@@ -70,16 +73,25 @@ class ProductNcmField {
 	protected $webmania;
 
 	/**
+	 * @var NcmAiAvailability|null
+	 */
+	protected $ai;
+
+	/**
 	 * Products whose NCM field the store owner changed in this request: their NCM wins in the sync after the save.
 	 *
 	 * @var array<int, true>
 	 */
 	private $edited = [];
 
-	public function __construct( ProductNcmStore $store, CorreiosAutomatico $correios, WebmaniaBR $webmania ) {
+	/**
+	 * @param NcmAiAvailability|null $ai Whether the AI of SquidCore can suggest the NCM; null never offers it.
+	 */
+	public function __construct( ProductNcmStore $store, CorreiosAutomatico $correios, WebmaniaBR $webmania, ?NcmAiAvailability $ai = null ) {
 		$this->store = $store;
 		$this->correios = $correios;
 		$this->webmania = $webmania;
+		$this->ai = $ai;
 	}
 
 	public function register(): void {
@@ -121,6 +133,10 @@ class ProductNcmField {
 
 		if ( $this->webmania->isActive() ) {
 			$this->renderWebmaniaHint( $product_object );
+		}
+
+		if ( $this->offersAi() ) {
+			$this->renderAiSuggestion( $product_object, $value );
 		}
 
 		echo '</div>';
@@ -181,17 +197,42 @@ class ProductNcmField {
 			$this->addInlineStyle( self::CORREIOS_FIELD_CSS );
 		}
 
-		if ( $this->webmania->isActive() ) {
-			$path = 'assets/admin/js/product-ncm.js';
+		$ai = $this->offersAi();
 
-			wp_enqueue_script(
-				self::SCRIPT_HANDLE,
-				\INFIXS_SQUIDCORE_PLUGIN_URL . $path,
-				[],
-				(string) filemtime( \INFIXS_SQUIDCORE_PLUGIN_PATH . $path ),
-				true
-			);
+		if ( ! $ai && ! $this->webmania->isActive() ) {
+			return;
 		}
+
+		$path = 'assets/admin/js/product-ncm.js';
+
+		wp_enqueue_script(
+			self::SCRIPT_HANDLE,
+			\INFIXS_SQUIDCORE_PLUGIN_URL . $path,
+			$ai ? [ 'wp-api-fetch' ] : [],
+			(string) filemtime( \INFIXS_SQUIDCORE_PLUGIN_PATH . $path ),
+			true
+		);
+
+		if ( $ai ) {
+			wp_localize_script( self::SCRIPT_HANDLE, 'infixsSquidCoreProductNcm', [
+				'restPath' => '/infixs-squidcore/v1/products/',
+				'i18n' => [
+					'asking' => __( 'Asking the AI of SquidCore…', 'infixs-squidcore-erp' ),
+					'error' => __( 'The NCM could not be suggested. Try again.', 'infixs-squidcore-erp' ),
+					/* translators: %s: NCM suggested by the AI with its description, e.g. "3406.00.00 — Velas, pavios e semelhantes". */
+					'kept' => __( 'The AI suggested %s. The NCM in the field was filled in while it answered, so it was kept.', 'infixs-squidcore-erp' ),
+					/* translators: %s: NCM SquidCore uses on the invoices of the product, e.g. 6109.10.00. */
+					'keptSquidcore' => __( 'SquidCore already uses the NCM %s on the invoices of this product. The NCM in the field was filled in while the AI answered, so it was kept.', 'infixs-squidcore-erp' ),
+				],
+			] );
+		}
+	}
+
+	/**
+	 * "Suggest with AI" is offered while the organization has an AI in SquidCore and the user edits products.
+	 */
+	public function offersAi(): bool {
+		return $this->ai !== null && current_user_can( 'edit_products' ) && $this->ai->isAvailable();
 	}
 
 	/**
@@ -218,6 +259,23 @@ class ProductNcmField {
 		}
 
 		echo '</span></p>';
+	}
+
+	/**
+	 * The "Suggest with AI" button, shown while the field is empty (the script hides it as soon as something is typed),
+	 * and the line that tells the suggestion or why there is none.
+	 *
+	 * @param string $value What the field shows.
+	 */
+	private function renderAiSuggestion( \WC_Product $product, string $value ): void {
+		printf(
+			'<p class="form-field infixs-squidcore-ncm-ai" data-isq-ncm-ai%s><span class="description"><button type="button" class="button" data-isq-ncm-suggest="%d">%s</button><span class="spinner" data-isq-ncm-spinner style="float:none;margin:0 6px;"></span></span></p>',
+			NcmCode::normalize( $value ) !== '' ? ' style="display:none;"' : '',
+			(int) $product->get_id(),
+			esc_html__( 'Suggest with AI', 'infixs-squidcore-erp' )
+		);
+
+		echo '<p class="form-field infixs-squidcore-ncm-ai-result" data-isq-ncm-result style="display:none;"><span class="description" role="status" aria-live="polite"></span></p>';
 	}
 
 	/**
